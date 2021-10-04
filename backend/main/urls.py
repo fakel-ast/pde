@@ -19,12 +19,16 @@ from django.urls import path, include, re_path
 
 from main import settings
 from main import views
+from main.settings import URLS_FOR_VUE
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r'.*', views.FrontendTemplateView.as_view(), name='frontend_page'),
+    path('', views.FrontendTemplateView.as_view(), name='frontend_page'),
+    re_path(r'{}'.format('/|'.join(URLS_FOR_VUE)), views.FrontendTemplateView.as_view(), name='frontend_page'),
 ]
 
 if not settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
