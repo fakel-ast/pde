@@ -10,19 +10,19 @@
           class="sign-up-form form"
       >
 
-        <el-form-item label="Имя пользователя" prop="username">
+        <el-form-item label="Имя пользователя" prop="username" :error="modelErrors.username">
           <el-input v-model="signUpForm.username"></el-input>
         </el-form-item>
 
-        <el-form-item label="Пароль" prop="password1">
+        <el-form-item label="Пароль" prop="password1" :error="modelErrors.password1">
           <el-input type="password" v-model="signUpForm.password1" autocomplete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="Подтверждение пароля" prop="password2">
+        <el-form-item label="Подтверждение пароля" prop="password2" :error="modelErrors.password2">
           <el-input type="password" v-model="signUpForm.password2" autocomplete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="Группа" prop="group">
+        <el-form-item label="Группа" prop="group" :error="modelErrors.group">
           <el-select v-model="signUpForm.group" placeholder="Группа" style="width: 100%">
             <el-option
                 v-for="item in groups"
@@ -49,6 +49,8 @@ export default {
   data() {
     return {
       groups: [{id: 1, title: 'ОИБ-418'}, {id: 2, title: 'ОИБ-319'}, {id: 3, title: 'ОИБ-220'}],
+      errorsList: [],
+
       signUpForm: {
         username: '',
         password1: '',
@@ -60,16 +62,22 @@ export default {
           {required: true, message: 'Пожалуйста, введите имя пользователя', trigger: 'blur'},
         ],
         password1: [
-          {required: true, min: 5, max: 12, message: 'Длина должна быть от 5 до 12 символов', trigger: 'blur'},
+          {required: true, min: 0, message: 'Минимальная длина пароля 8 символов', trigger: 'blur'},
           {validator: this.validatePassword1, trigger: 'blur'},
         ],
         password2: [
-          {required: true, min: 5, max: 12, message: 'Длина должна быть от 5 до 12 символов', trigger: 'blur'},
+          {required: true, min: 0, message: 'Минимальная длина пароля 8 символов', trigger: 'blur'},
           {validator: this.validatePassword2, trigger: 'blur'},
         ],
         group: [
-          {required: true, message: 'Пожалуйста, выберите группу', trigger: 'change'}
+          {required: true, message: 'Пожалуйста, выберите группу', trigger: 'blur'}
         ],
+      },
+      modelErrors: {
+        username: '',
+        password1: '',
+        password2: '',
+        group: ''
       }
     }
   },
@@ -94,9 +102,17 @@ export default {
       }
     },
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          alert('submit!');
+          const {errors, data} = await this.$sendForm('users/sign-up/', this.signUpForm, 'post', this.modelErrors)
+          if (!errors) {
+            this.$message.success('Вы успешно зарегистрировались')
+          } else {
+            this.modelErrors = {}
+            setTimeout(() => {
+              this.modelErrors = data.modelErrors
+            }, 200)
+          }
         } else {
           return false;
         }
@@ -115,6 +131,7 @@ export default {
   max-width: 700px;
   margin: 0 auto;
 }
+
 .sign-up-container {
   height: 100vh;
   display: flex;

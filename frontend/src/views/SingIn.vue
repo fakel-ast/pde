@@ -10,17 +10,16 @@
           class="sign-in-form form"
       >
 
-        <el-form-item label="Имя пользователя" prop="username">
-          <el-input v-model="signInForm.username"></el-input>
+        <el-form-item label="Имя пользователя" prop="username" :error="modelErrors.username">
+          <el-input v-model="signInForm.username" placeholder="Имя пользователя"></el-input>
         </el-form-item>
 
-        <el-form-item label="Пароль" prop="password">
-          <el-input type="password" v-model="signInForm.password" autocomplete="off"></el-input>
+        <el-form-item label="Пароль" prop="password" :error="modelErrors.password">
+          <el-input type="password" v-model="signInForm.password" autocomplete="off" placeholder="Пароль"></el-input>
         </el-form-item>
 
         <el-form-item>
           <el-button @click="submitForm('signInForm')" type="primary">Войти</el-button>
-          <el-button @click="resetForm('signInForm')">Сбросить</el-button>
         </el-form-item>
 
       </el-form>
@@ -29,6 +28,8 @@
 </template>
 
 <script>
+import { Axios } from "@/http-common";
+
 export default {
   name: "SingUp",
   data() {
@@ -42,9 +43,13 @@ export default {
           {required: true, message: 'Пожалуйста, введите имя пользователя', trigger: 'blur'},
         ],
         password: [
-          {required: true, min: 5, max: 12, message: 'Длина должна быть от 5 до 12 символов', trigger: 'blur'},
+          {required: true, min: 8, message: 'Минимальная длина пароля 8 символов', trigger: 'blur'},
           {validator: this.validatePassword, trigger: 'blur'},
         ]
+      },
+      modelErrors: {
+        username: '',
+        password: ''
       }
     }
   },
@@ -60,18 +65,23 @@ export default {
       }
     },
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          alert('submit!');
+          const {errors, data} = await this.$sendForm('users/sign-in/', this.signInForm, 'post', this.modelErrors)
+          if (!errors) {
+            this.$message.success(`Вы успешно вошли как ${data.username}`)
+          } else {
+            this.modelErrors = {}
+            setTimeout(() => {
+              this.modelErrors = data.modelErrors
+            }, 200)
+          }
         } else {
           return false;
         }
       });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    }
 
+    }
   }
 }
 </script>
@@ -81,6 +91,7 @@ export default {
   max-width: 700px;
   margin: 0 auto;
 }
+
 .sign-in-container {
   height: 100vh;
   display: flex;
