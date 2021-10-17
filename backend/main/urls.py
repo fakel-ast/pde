@@ -24,7 +24,7 @@ from main.settings import URLS_FOR_VUE
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', include('apps.users.urls')),
+    path('api/users/', include('apps.users.urls')),
     path('', views.FrontendTemplateView.as_view(), name='frontend_page'),
     re_path(r'{}'.format('/|'.join(URLS_FOR_VUE)), views.FrontendTemplateView.as_view(), name='frontend_page'),
 ]
