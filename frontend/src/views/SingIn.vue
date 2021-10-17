@@ -28,8 +28,6 @@
 </template>
 
 <script>
-import { Axios } from "@/http-common";
-
 export default {
   name: "SingUp",
   data() {
