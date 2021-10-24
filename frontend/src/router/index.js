@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Tasks from '../views/Tasks.vue'
 import SingUp from '../views/SingUp.vue'
 import SingIn from '../views/SingIn.vue'
+import Categories from "@/views/Categories";
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: '/sign-in',
     name: 'SingIn',
     component: SingIn
+  },
+  {
+    path: '/categories',
+    name: 'Categories',
+    component: Categories
   },
 ]
 
