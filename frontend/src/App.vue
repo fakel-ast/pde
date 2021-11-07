@@ -1,17 +1,83 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/tasks">Tasks</router-link> |
-    <router-link to="/sign-up">Sign up</router-link> |
-  </div>
-  <router-view/>
+
+  <el-container v-loading="false" element-loading-text="Загрузка..." element-loading-background="rgba(0, 0, 0, 0.8)"
+                element-loading-spinner="el-icon-loading">
+    <!-- sidebar start -->
+    <sidebar-component :is-open="isOpenSidebar" :get-active-index="getActiveIndex"/>
+    <!-- sidebar end -->
+
+    <el-container direction="vertical">
+      <!-- Header start-->
+      <header-component
+          @toggle-sidebar="isOpenSidebar = !isOpenSidebar"
+          :is-reverse-sidebar-icon="!isOpenSidebar"
+          :get-active-index="getActiveIndex"
+      />
+      <!-- header end -->
+      <router-view />
+    </el-container>
+  </el-container>
+
 </template>
+
+<script>
+import HeaderComponent from "./components/HeaderComponent";
+import SidebarComponent from "./components/SidebarComponent";
+
+export default {
+  name: "App",
+  data() {
+    return {
+      isOpenSidebar: true
+    }
+  },
+  components: {
+    HeaderComponent, SidebarComponent
+  },
+  methods: {
+    getActiveIndex(menuArray) {
+      return (menuArray.find(itemMenu => itemMenu.route.name === this.$route.name)?.id || '').toString()
+    }
+  }
+}
+
+</script>
 
 <style lang="scss">
 @import "../public/css/reset.css";
 
-.el-container {
+#app {
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+  'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+}
+
+.container {
   max-width: 1400px;
   margin: 0 auto;
 }
+
+.el-sub-menu__title:hover {
+  background-color: unset;
+}
+
+.el-menu-item {
+  display: flex;
+  align-items: center;
+}
+
+.el-menu-item:hover {
+  background-color: #F2F6FC !important;
+}
+
+.el-menu-item * {
+  vertical-align: unset;
+}
+
+.submenu__icon {
+  margin-right: 10px;
+}
+
 </style>
