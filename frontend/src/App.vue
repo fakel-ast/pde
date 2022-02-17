@@ -1,28 +1,21 @@
 <template>
+  <!-- Header start-->
+  <header-component
+      @toggle-sidebar="isOpenSidebar = !isOpenSidebar"
+      :is-reverse-sidebar-icon="!isOpenSidebar"
+      :get-active-index="getActiveIndex"
+  />
+  <!-- header end -->
+  <el-container direction="vertical" v-loading="false" element-loading-text="Загрузка..."
+                element-loading-background="rgba(0, 0, 0, 0.8)"
+                element-loading-spinner="el-icon-loading" class="container">
 
-  <el-container v-loading="false" element-loading-text="Загрузка..." element-loading-background="rgba(0, 0, 0, 0.8)"
-                element-loading-spinner="el-icon-loading">
-    <!-- sidebar start -->
-    <sidebar-component :is-open="isOpenSidebar" :get-active-index="getActiveIndex"/>
-    <!-- sidebar end -->
-
-    <el-container direction="vertical">
-      <!-- Header start-->
-      <header-component
-          @toggle-sidebar="isOpenSidebar = !isOpenSidebar"
-          :is-reverse-sidebar-icon="!isOpenSidebar"
-          :get-active-index="getActiveIndex"
-      />
-      <!-- header end -->
-      <router-view />
-    </el-container>
+    <router-view/>
   </el-container>
-
 </template>
 
 <script>
 import HeaderComponent from "./components/HeaderComponent";
-import SidebarComponent from "./components/SidebarComponent";
 
 export default {
   name: "App",
@@ -32,7 +25,7 @@ export default {
     }
   },
   components: {
-    HeaderComponent, SidebarComponent
+    HeaderComponent
   },
   methods: {
     getActiveIndex(menuArray) {
