@@ -1,0 +1,33 @@
+/*------- ОСНОВНЫЕ РАЗМЕРЫ ШРИФТОВ -------*/
+$font-size: 3.1vw;
+$font-size-tablet: 15px;
+$font-size-desktop: 1.20391vw;
+
+/*------- BREAKPOINT -------*/
+$breakpoint-desktop: 640px;
+$breakpoint-maximum: 1476px;
+
+@mixin _desktop {
+  @media (min-width: $breakpoint-desktop) {
+    @content;
+  }
+}
+
+@mixin _max {
+  @media (min-width: $breakpoint-maximum) {
+    @content;
+  }
+}
+
+/*------- ПЕРЕВОД В REM -------*/
+@function toRem($px) {
+  @return ($px / 16) + rem;
+}
+
+@function toRemMob($px) {
+  @return $px / 12.834 + rem;
+}
+
+
+$body-background: #1C1A32;
+$white-color: #fff;

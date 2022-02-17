@@ -1,6 +1,6 @@
 <template>
-  <header-component />
-  <router-view />
+  <header-component/>
+  <router-view/>
 </template>
 
 <script>
@@ -15,5 +15,17 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~reset-css";
+@import "./assets/css/fonts";
 
+html {
+  font-size: 16px;
+
+}
+
+body {
+  background-color: $body-background;
+  color: $white-color;
+  font-weight: 600;
+}
 </style>
