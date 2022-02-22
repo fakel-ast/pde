@@ -22,7 +22,7 @@ $breakpoint-maximum: 1476px;
 
 /*------- ПЕРЕВОД В REM -------*/
 @function toRem($px) {
-  @return ($px / 22) + rem;
+  @return ($px / 22.57) + rem;
 }
 
 @function toRemMob($px) {
