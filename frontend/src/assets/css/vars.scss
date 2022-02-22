@@ -6,7 +6,7 @@ $font-size-desktop: 1.20391vw;
 /*------- BREAKPOINT -------*/
 $breakpoint-desktop: 640px;
 $breakpoint-tablet: 640px;
-$breakpoint-maximum: 1476px;
+$breakpoint-maximum: 1800px;
 
 @mixin _desktop {
   @media (min-width: $breakpoint-desktop) {

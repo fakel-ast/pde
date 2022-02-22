@@ -49,11 +49,9 @@ export default {
 
 .header {
   display: flex;
-  align-items: center;
   margin: toRemMob(22) toRemMob(28);
   @include _desktop {
     margin: toRem(50) toRem(60);
-    padding: toRem(15) 0;
   }
 
   &__logo {
@@ -70,8 +68,8 @@ export default {
     display: none;
 
     @include _desktop {
-      margin-left: toRem(40);
       display: flex;
+      margin-left: toRem(40);
     }
   }
 
@@ -193,6 +191,7 @@ export default {
     @include _desktop {
       margin-left: toRem(23);
       font-size: toRem(33);
+      line-height: toRem(38);
     }
   }
 }

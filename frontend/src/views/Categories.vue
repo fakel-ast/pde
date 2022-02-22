@@ -45,7 +45,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
+.section-categories {
+  padding-top: toRemMob(21);
+  @include _desktop {
+    padding-top: toRem(59);
+  }
+}
 .category {
   &__list {
     display: flex;

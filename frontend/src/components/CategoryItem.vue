@@ -1,12 +1,11 @@
 <template>
   <li class="category__item">
     <div class="category__wrapper">
-
       <div
         :style="{
-        'mask-image': `url(${category.image})`,
-        '-webkit-mask-image': `url(${category.image})`,
-      }"
+          'mask-image': `url(${category.image})`,
+          '-webkit-mask-image': `url(${category.image})`,
+        }"
         class="category__image"
       ></div>
       <p class="category__title">{{ category.title }}</p>

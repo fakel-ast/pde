@@ -35,6 +35,9 @@ html {
   @include _desktop {
     font-size: 1.15vw;
   }
+  @include _max {
+    font-size: 22.57px;
+  }
 }
 
 body {
@@ -54,7 +57,7 @@ body {
 }
 
 .button {
-  padding: 10px 38px 8px 38px;
+  padding: toRem(10) toRem(37) toRem(8) toRem(37);
   border-radius: 40px;
   background: $blue-color;
 
