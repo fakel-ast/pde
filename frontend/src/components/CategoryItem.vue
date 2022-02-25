@@ -1,16 +1,18 @@
 <template>
   <li class="category__item">
-    <div class="category__wrapper">
-      <div
-        :style="{
-          'mask-image': `url(${category.image})`,
-          '-webkit-mask-image': `url(${category.image})`,
-        }"
-        class="category__image"
-      ></div>
-      <p class="category__title">{{ category.title }}</p>
-      <p class="category__tasks">{{ category.tasks_count }} задач</p>
-    </div>
+    <router-link :to="{ path: '/asdas' }">
+      <div class="category__wrapper">
+        <div
+          :style="{
+            'mask-image': `url(${category.image})`,
+            '-webkit-mask-image': `url(${category.image})`,
+          }"
+          class="category__image"
+        ></div>
+        <p class="category__title">{{ category.title }}</p>
+        <p class="category__tasks">{{ category.tasks_count }} задач</p>
+      </div>
+    </router-link>
   </li>
 </template>
 
