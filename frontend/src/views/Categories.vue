@@ -21,26 +21,14 @@ import CategoryItem from "@/components/CategoryItem";
 
 export default {
   name: "Categories",
+  props: {
+    categories: Array,
+  },
   components: {
     CategoryItem
   },
   data() {
-    return {
-      categories: [
-        {id: 1, title: "Администрирование", image: require("../assets/images/categories/admin.svg"), tasks_count: 91},
-        {id: 2, title: "Криптография", image: require("../assets/images/categories/crypto.svg"), tasks_count: 9},
-        {id: 3, title: "Развлечения", image: require("../assets/images/categories/entertainment.svg"), tasks_count: 2},
-        {id: 4, title: "Криминалистика", image: require("../assets/images/categories/criminalistics.svg"), tasks_count: 9},
-        {id: 5, title: "Хеши", image: require("../assets/images/categories/hesh.svg"), tasks_count: 0},
-        {id: 6, title: "Сети", image: require("../assets/images/categories/networks.svg"), tasks_count: 9},
-        {id: 7, title: "Программирование", image: require("../assets/images/categories/programming.svg"), tasks_count: 9},
-        {id: 8, title: "Разведка", image: require("../assets/images/categories/exploration.svg"), tasks_count: 12},
-        {id: 9, title: "Бинарный код", image: require("../assets/images/categories/bin_code.svg"), tasks_count: 15},
-        {id: 10, title: "Стенография", image: require("../assets/images/categories/databse.svg"), tasks_count: 9},
-        {id: 11, title: "Квесты", image: require("../assets/images/categories/quests.svg"), tasks_count: 13},
-        {id: 12, title: "Веб", image: require("../assets/images/categories/web.svg"), tasks_count: 13},
-      ]
-    };
+    return {};
   }
 };
 </script>
@@ -52,10 +40,14 @@ export default {
     padding-top: toRem(59);
   }
 }
+
 .category {
   &__list {
     display: flex;
     flex-wrap: wrap;
+    @include _desktop {
+      margin-right: -0.93044rem;
+    }
   }
 }
 </style>

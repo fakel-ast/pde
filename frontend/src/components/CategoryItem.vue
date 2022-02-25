@@ -5,7 +5,7 @@
         <div
           :style="{
             'mask-image': `url(${category.image})`,
-            '-webkit-mask-image': `url(${category.image})`,
+          '-webkit-mask-image': `url(${category.image})`,
           }"
           class="category__image"
         ></div>
@@ -58,9 +58,8 @@ export default {
         margin-top: 0 !important;
       }
       &:nth-child(1n) {
-        margin-right: toRemMob(21);
+        margin-right: toRem(21);
       }
-      margin-right: toRem(21);
 
       &:not(:nth-child(-n + 4)) {
         margin-top: 20px !important;
