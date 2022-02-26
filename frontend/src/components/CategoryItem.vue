@@ -1,11 +1,11 @@
 <template>
   <li class="category__item">
-    <router-link :to="{ path: '/asdas' }">
+    <router-link :to="{ name: 'Category', params: { categorySlug: category.slug } }">
       <div class="category__wrapper">
         <div
           :style="{
             'mask-image': `url(${category.image})`,
-          '-webkit-mask-image': `url(${category.image})`,
+            '-webkit-mask-image': `url(${category.image})`,
           }"
           class="category__image"
         ></div>
