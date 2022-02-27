@@ -2,7 +2,7 @@
   <section class="section-category category">
     <div class="container">
       <div class="category__header">
-        <h1 class="category__title page-title">Администрирование</h1>
+        <h1 class="category__title page-title">{{ currentCategory.title }}</h1>
         <div @click="isOpenSortMenu = !isOpenSortMenu" class="category__sort category-sort">
           <div class="category-sort-direction">
             <svg
@@ -59,6 +59,9 @@ export default {
   ],
 
   name: "Category",
+  props: {
+    categories: Object,
+  },
   components: {
     TasksList,
   },
@@ -196,6 +199,9 @@ export default {
         tasks = tasks.sort((a, b) => a[sortTypeValue] - b[sortTypeValue]);
       }
       return this.isReverse ? tasks.reverse() : tasks;
+    },
+    currentCategory() {
+      return this.categories.find(category => category.slug === this.$route.params.categorySlug) || {};
     },
   },
 };

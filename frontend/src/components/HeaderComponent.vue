@@ -1,9 +1,11 @@
 <template>
   <header class="header">
-    <div class="header__logo logo">
+
+    <router-link class="header__logo logo" :to="{name: 'Categories'}">
       <img class="logo__image" src="../assets/images/header/logo.svg" alt="CodeSkill logo"/>
       <p class="logo__text">CodeSkill</p>
-    </div>
+    </router-link>
+
     <nav class="header__nav">
       <ul class="header__list">
         <li class="header__item">
