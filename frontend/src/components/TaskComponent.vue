@@ -3,7 +3,7 @@
     :class="{solved: task.is_solved}"
     class="task__item"
   >
-    <router-link class="task__link" to="/asdas/">
+    <router-link class="task__link" :to="{ name: 'TaskDetail', params: { ...$route.params, taskId: task.id } }">
       <div class="task__header">
         <p class="task__title">{{ task.title }}</p>
         <p class="task__points">+{{ task.point_count }} очков</p>
@@ -26,6 +26,7 @@ export default {
   name: "TaskComponent",
   props: {
     task: Object,
+    currentCategory: Object,
   },
   methods: {
     getSolvedSuffix(count) {
@@ -40,8 +41,8 @@ export default {
         return "пользователя";
       }
       return "пользователей";
-    }
-  }
+    },
+  },
 };
 </script>
 

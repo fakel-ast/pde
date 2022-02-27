@@ -4,16 +4,19 @@
       v-for="task in tasks"
       :key="`task-${task.id}`"
       :task="task"
+      :current-category="currentCategory"
     />
   </ul>
 </template>
 
 <script>
 import TaskComponent from "@/components/TaskComponent";
+
 export default {
   name: "TasksList",
   props: {
     tasks: Array,
+    currentCategory: Object,
   },
   components: {
     TaskComponent,

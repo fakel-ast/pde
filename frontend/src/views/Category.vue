@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="category__tasks tasks">
-        <tasks-list :tasks="sortedTasks"/>
+        <tasks-list :tasks="sortedTasks" :current-category="currentCategory"/>
       </div>
     </div>
   </section>
@@ -53,9 +53,9 @@ import TasksList from "@/components/TasksList";
 
 export default {
   sortTypes: [
-    {title: "Сортировать по алфавиту", value: "title"},
-    {title: "Сортировать по дате публикации", value: "created"},
-    {title: "Сортировать по очкам", value: "point_count"},
+    { title: "Сортировать по алфавиту", value: "title" },
+    { title: "Сортировать по дате публикации", value: "created" },
+    { title: "Сортировать по очкам", value: "point_count" },
   ],
 
   name: "Category",
@@ -201,7 +201,7 @@ export default {
       return this.isReverse ? tasks.reverse() : tasks;
     },
     currentCategory() {
-      return this.categories.find(category => category.slug === this.$route.params.categorySlug) || {};
+      return this.categories.find((category) => category.slug === this.$route.params.categorySlug) || {};
     },
   },
 };
