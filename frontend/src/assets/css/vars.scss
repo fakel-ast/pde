@@ -14,6 +14,12 @@ $breakpoint-maximum: 1800px;
   }
 }
 
+@mixin _mobile {
+  @media (max-width: $breakpoint-desktop) {
+    @content;
+  }
+}
+
 @mixin _max {
   @media (min-width: $breakpoint-maximum) {
     @content;

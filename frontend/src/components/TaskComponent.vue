@@ -79,7 +79,7 @@ export default {
 
     @include _desktop {
       padding: toRemMob(24) toRemMob(34) toRemMob(19) toRemMob(30);
-      width: toRem(363);
+      width: toRem(427);
       border-radius: toRem(18);
 
       &:not(:first-child) {

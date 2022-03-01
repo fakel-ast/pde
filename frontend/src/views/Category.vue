@@ -236,95 +236,99 @@ export default {
   }
 }
 
-.category-sort {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: toRem(10) toRem(50) toRem(8) toRem(50);
-  margin-top: toRem(24);
-  min-width: toRem(321);
-  border: 1px solid $grey-color;
-  border-radius: toRem(25);
-  cursor: pointer;
-  color: $grey-color;
+@include _desktop {
+  .category-sort {
 
-  &-direction {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     align-items: center;
-    height: toRem(16);
-    width: toRem(14);
+    justify-content: center;
+    position: relative;
+    padding: toRem(10) toRem(50) toRem(8) toRem(50);
+    margin-top: toRem(24);
+    min-width: toRem(321);
+    border: 1px solid $grey-color;
+    border-radius: toRem(25);
+    cursor: pointer;
+    color: $grey-color;
 
-    &__ascending,
-    &__descending {
-      cursor: pointer;
-      fill: $black-color;
-      stroke: $grey-color;
-      transition: fill 0.2s ease, stroke 0.2s ease;
-      width: 16px;
-      height: 7px;
+    &-direction {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      height: toRem(16);
+      width: toRem(14);
 
-      &:hover {
-        fill: $grey-color-two;
+      &__ascending,
+      &__descending {
+        cursor: pointer;
+        fill: $black-color;
+        stroke: $grey-color;
+        transition: fill 0.2s ease, stroke 0.2s ease;
+        width: 16px;
+        height: 7px;
+
+        &:hover {
+          fill: $grey-color-two;
+        }
+
+        &.active {
+          fill: $grey-color-two;
+        }
+      }
+
+      &__descending {
+        transform: rotate(-180deg);
+        cursor: pointer;
+      }
+    }
+
+    &__list {
+      position: absolute;
+      top: toRem(64);
+      left: 0;
+      z-index: 2;
+      max-width: 87%;
+      min-width: toRem(267);
+      width: 100%;
+      padding: toRem(31) toRem(38) toRem(27) toRem(21);
+      opacity: 0;
+      visibility: hidden;
+      background-color: $dark-grey-color;
+      border-radius: toRem(19);
+      color: $white-color;
+      transition: opacity 0.2s ease;
+
+      &.active {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    &__item {
+      font-size: toRem(22);
+      line-height: toRem(25);
+      transition: color 0.2s ease;
+
+      &:not(:first-child) {
+        margin-top: toRem(34);
       }
 
       &.active {
-        fill: $grey-color-two;
+        color: $grey-color-two;
+      }
+
+      &:hover {
+        color: $blue-color;
       }
     }
 
-    &__descending {
-      transform: rotate(-180deg);
-      cursor: pointer;
+    &__current {
+      margin-left: toRem(10);
+      font-size: toRem(22);
+      line-height: toRem(25);
     }
-  }
-
-  &__list {
-    position: absolute;
-    top: toRem(64);
-    left: 0;
-    z-index: 2;
-    max-width: 87%;
-    min-width: toRem(267);
-    width: 100%;
-    padding: toRem(31) toRem(38) toRem(27) toRem(21);
-    opacity: 0;
-    visibility: hidden;
-    background-color: $dark-grey-color;
-    border-radius: toRem(19);
-    color: $white-color;
-    transition: opacity 0.2s ease;
-
-    &.active {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-
-  &__item {
-    font-size: toRem(22);
-    line-height: toRem(25);
-    transition: color 0.2s ease;
-
-    &:not(:first-child) {
-      margin-top: toRem(34);
-    }
-
-    &.active {
-      color: $grey-color-two;
-    }
-
-    &:hover {
-      color: $blue-color;
-    }
-  }
-
-  &__current {
-    margin-left: toRem(10);
-    font-size: toRem(22);
-    line-height: toRem(25);
   }
 }
+
 </style>
