@@ -76,6 +76,10 @@
               Ответ
             </p>
           </div>
+          <div class="task-answers__not-auth not-auth">
+            <span class="not-auth__text">Для этого&nbsp;</span>
+            <a class="not-auth__link" href="#">войдите или зарегистрируйтесь!</a>
+          </div>
           <div class="task-answers__answer answer-form">
             <label for="answer" class="answer-form__title">
               Вставьте ответ в поле:
@@ -506,8 +510,19 @@ export default {
   &__old-answers {
     margin-top: toRem(46);
   }
+
+  &__not-auth {
+    margin-top: toRem(26);
+    font-size: toRem(20);
+    line-height: toRem(24);
+  }
 }
 
+.not-auth {
+  &__link {
+    color: $sea-color;
+  }
+}
 .answer-form {
   &__title {
     display: block;
@@ -517,6 +532,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-top: toRem(17);
   }
 
   &__input {
@@ -527,6 +543,8 @@ export default {
     background-color: transparent;
     color: $white-color;
     outline: none;
+    font-size: toRem(22);
+    line-height: toRem(25);
 
     &::placeholder {
       color: $grey-color;

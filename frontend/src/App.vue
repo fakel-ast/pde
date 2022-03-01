@@ -109,11 +109,11 @@ a {
   transition: color .2s ease;
 
   &:active {
-    color: $blue-color;
+    color: $blue-color !important;
     text-decoration: underline;
   }
   &:hover {
-    color: $blue-color;
+    color: $blue-color !important;
   }
 }
 
