@@ -1,5 +1,4 @@
-from peewee import DateTimeField, CharField, IntegerField, BooleanField, ForeignKeyField, ManyToManyField, \
-    DeferredThroughModel, SmallIntegerField
+from peewee import DateTimeField, CharField, IntegerField, BooleanField, ForeignKeyField, SmallIntegerField, TextField
 from datetime import datetime
 
 from backend import pw
@@ -15,10 +14,6 @@ def make_table_name(model_class):
     return '{}{}'.format(TABLE_PREFIX, model_name.lower())
 
 
-OrderConfigurationThrough = DeferredThroughModel()
-OrderAdditionalAttributesThrough = DeferredThroughModel()
-
-
 class BaseModel(pw.Model):
     created = DateTimeField(default=datetime.utcnow)
     updated = DateTimeField(default=datetime.utcnow, null=True)
@@ -29,3 +24,23 @@ class BaseModel(pw.Model):
 
     class Meta:
         table_function = make_table_name
+
+
+class TaskCategory(BaseModel):
+    """Model for task category"""
+    title = CharField(max_length=128, verbose_name='Название категории')
+    image = CharField(null=True, verbose_name='Фото категории (svg)')
+    active = BooleanField(default=True, verbose_name='Показывать категорию')
+
+    class Meta:
+        table_name = TABLE_PREFIX + 'task_category'
+
+
+class Task(BaseModel):
+    """Model for task"""
+    title = CharField(max_length=128, verbose_name='Название категории')
+    point_count = SmallIntegerField(default=0, verbose_name='Количество очков за решение')
+    description = TextField(null=True, verbose_name='Описание')
+
+    class Meta:
+        table_name = TABLE_PREFIX + 'task'
