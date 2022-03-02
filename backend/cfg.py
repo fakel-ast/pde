@@ -17,8 +17,8 @@ class DefaultConfig(object):
 
     IS_TESTING = os.environ.get('IS_TESTING', False)
 
-    DB_NAME = os.environ.get('DB_NAME', 'grd')
-    DB_USER = os.environ.get('DB_USER', 'grd')
+    DB_NAME = os.environ.get('DB_NAME', 'code_skill')
+    DB_USER = os.environ.get('DB_USER', 'code_skill')
     DB_PASS = os.environ.get('DB_PASS', '')
     DB_HOST = os.environ.get('DB_HOST', 'localhost')
     DB_PORT = os.environ.get('DB_PORT', 3366)

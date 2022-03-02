@@ -1,3 +1,4 @@
+attrs==21.4.0
 blinker==1.4
 certifi==2021.10.8
 charset-normalizer==2.0.12
@@ -11,12 +12,13 @@ Flask-Mail==0.9.1
 idna==3.3
 itsdangerous==2.1.0
 Jinja2==3.0.3
+jsonschema==4.4.0
 MarkupSafe==2.1.0
 peewee==3.14.9
 PyJWT==2.3.0
 PyMySQL==1.0.2
+pyrsistent==0.18.1
 python-dotenv==0.19.2
-requests==2.27.1
 six==1.16.0
 urllib3==1.26.8
 Werkzeug==2.0.3

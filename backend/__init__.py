@@ -9,6 +9,7 @@ from flask_mail import Mail
 
 from backend.apps.users.mixins import CustomAnonymousUserMixin
 from backend.cfg import DefaultConfig, build, logs, templates, media
+from functions import csrf_token
 
 
 class MyFlaskDB(FlaskDB):
@@ -51,15 +52,13 @@ def initialize_extensions(app):
 
 
 def register_blueprints(app_name):
-    from app.database import models
-    from app.database.models import BaseModel
+    from backend.database import models
+    from backend.database.models import BaseModel
 
     if not app_name.config.get('IS_TESTING', False):
         pw.database.create_tables(BaseModel.__subclasses__())
-        from app.database.migrations import Migration
-        # Migration().run_migrate(app_name)
 
-    from app.apps.api import api
+    from backend.apps.api import api
     app_name.register_blueprint(api, url_prefix='/api/v1/')
 
     if app_name.debug:
@@ -86,9 +85,6 @@ def application_context_processor(app):
     def utility_processor():
         return dict(
             csrf_token=csrf_token,
-            get_json_translate=get_json_translate,
-            nice_price=nice_price,
-            time_with_timezone=time_with_timezone
         )
 
 
