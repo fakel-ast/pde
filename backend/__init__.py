@@ -57,7 +57,7 @@ def register_blueprints(app_name):
 
     if app_name.debug:
         pass
-        # pw.database.create_tables(BaseModel.__subclasses__())
+        pw.database.create_tables(BaseModel.__subclasses__())
 
     from backend.apps.api import api
     app_name.register_blueprint(api, url_prefix='/api/v1/')
