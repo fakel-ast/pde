@@ -58,16 +58,6 @@ class Task(BaseModel):
         table_name = TABLE_PREFIX + 'task'
 
 
-class TaskAnswer(BaseModel):
-    """Model for save user answer on task"""
-    task = ForeignKeyField(Task, on_delete=CASCADE)
-    answer = TextField(null=True, verbose_name='Текст ответа')
-    is_success = BooleanField(default=False, verbose_name='Является ли ответ правильным')
-
-    class Meta:
-        table_name = TABLE_PREFIX + 'task_answer'
-
-
 class TaskFile(BaseModel):
     """Model for attach files to task"""
     task = ForeignKeyField(Task, on_delete=CASCADE)
@@ -119,6 +109,17 @@ class UserSolvedTask(BaseModel):
 
     class Meta:
         table_name = TABLE_PREFIX + 'user_solved_task'
+
+
+class TaskAnswer(BaseModel):
+    """Model for save user answer on task"""
+    task = ForeignKeyField(Task, on_delete=CASCADE)
+    user = ForeignKeyField(User, on_delete=CASCADE)
+    answer = TextField(null=True, verbose_name='Текст ответа')
+    is_success = BooleanField(default=False, verbose_name='Является ли ответ правильным')
+
+    class Meta:
+        table_name = TABLE_PREFIX + 'task_answer'
 
 
 class RefreshToken(BaseModel):
