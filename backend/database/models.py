@@ -41,6 +41,9 @@ class TaskType(BaseModel):
     """Model for task type (simple text, program code)"""
     title = CharField(max_length=32, verbose_name='Название типа задачи')
 
+    class Meta:
+        table_name = TABLE_PREFIX + 'task_type'
+
 
 class Task(BaseModel):
     """Model for task"""
