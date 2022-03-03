@@ -3,6 +3,7 @@ import os
 
 from flask import Flask, send_from_directory, request, render_template
 from flask_cors import CORS
+from flask_login import LoginManager
 from peewee import MySQLDatabase
 from playhouse.flask_utils import FlaskDB
 from flask_mail import Mail
@@ -22,6 +23,10 @@ pw = MyFlaskDB()
 
 # Email
 mail = Mail()
+
+# Flask-login
+login = LoginManager()
+login.anonymous_user = CustomAnonymousUserMixin
 
 
 def init_app(configuration=DefaultConfig):
@@ -49,6 +54,7 @@ def initialize_extensions(app):
         )
         pw.init_app(app)
     mail.init_app(app)
+    login.init_app(app)
 
 
 def register_blueprints(app_name):

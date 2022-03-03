@@ -8,6 +8,14 @@ class CustomAnonymousUserMixin(AnonymousUserMixin):
     def has_roles(self, *args, **kwargs):
         return False
 
+    @property
+    def id(self, *args, **kwargs):
+        return 0
+
+    @id.setter
+    def id(self, *args, **kwargs):
+        return
+
 
 class CustomUserMixin(UserMixin):
 

@@ -1,7 +1,7 @@
 from peewee import DateTimeField, CharField, IntegerField, BooleanField, ForeignKeyField, SmallIntegerField, TextField
 from datetime import datetime
 
-from backend import pw
+from backend import pw, login
 from backend.apps.users.mixins import CustomUserMixin
 
 TABLE_PREFIX = 'cs__'
@@ -62,6 +62,8 @@ class TaskFile(BaseModel):
     """Model for attach files to task"""
     task = ForeignKeyField(Task, on_delete=CASCADE)
     file = CharField(max_length=128, verbose_name='Файл (название)')
+    size = IntegerField(verbose_name='Размер файла', default=0)
+    order = IntegerField(default=999, verbose_name='Сортировка')
 
     class Meta:
         table_name = TABLE_PREFIX + 'task_file'
@@ -71,6 +73,7 @@ class TaskHint(BaseModel):
     """Model for attach hint to task"""
     task = ForeignKeyField(Task, on_delete=CASCADE)
     hint = CharField(max_length=256, verbose_name='Текст подсказки')
+    order = IntegerField(default=999, verbose_name='Сортировка')
 
     class Meta:
         table_name = TABLE_PREFIX + 'task_hint'
@@ -129,3 +132,8 @@ class RefreshToken(BaseModel):
 
     class Meta:
         table_name = TABLE_PREFIX + 'refresh_token'
+
+
+@login.user_loader
+def load_user(user_id):
+    return User.get(int(user_id))
