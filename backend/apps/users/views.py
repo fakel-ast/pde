@@ -6,7 +6,7 @@ from flask import session
 from flask_login import login_user
 import jwt
 
-from backend.base import MyMethodView
+from backend.base import MyMethodView, user_required
 
 
 class CreateUserView(MyMethodView):
@@ -15,14 +15,14 @@ class CreateUserView(MyMethodView):
     def post(self, *args, **kwargs):
         try:
 
-            from app.database.models import User
+            from backend.database.models import User
             if self.data.get('password') and self.data.get('username'):
                 user = User()
                 user.create_user(password=self.data.get('password'), username=self.data.get('username'))
                 user.save()
                 if user:
-                    return {'errors': False, 'new_user_id': user.id}
-            return {'errors': True, 'message': 'Not valid data'}
+                    return {'errors': False, 'new_user_id': user.id}, 201
+            return {'errors': True, 'message': 'Not valid data'}, 400
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             return {'errors': True, 'message': f'{e} in {format(exc_tb.tb_lineno)}'}
@@ -34,7 +34,7 @@ class ChangedUserView(MyMethodView):
     def post(self, *args, **kwargs):
         try:
 
-            from app.database.models import User
+            from backend.database.models import User
             user = User.select().where(User.id == self.data.get('id')).first()
             if user:
                 changed_fields = []
@@ -58,8 +58,8 @@ class LoginView(MyMethodView):
     def post(self, *args, **kwargs):
         try:
 
-            from app.database.models import User, RefreshToken
-            from glass import app
+            from backend.database.models import User, RefreshToken
+            from code_skill import app
 
             user = User.select().where(User.username == self.data.get('username', '')).first()
             if user and user.check_password(self.data.get('password', '')):
@@ -84,7 +84,7 @@ class LoginView(MyMethodView):
 
                 return {'errors': False, 'token': token}
 
-            return {'errors': True, 'message': 'Not valid data'}
+            return {'errors': True, 'message': 'Not valid data'}, 400
 
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -106,8 +106,8 @@ class GetCurrentUserView(MyMethodView):
 class RefreshTokenView(MyMethodView):
 
     def post(self, *args, **kwargs):
-        from app.database.models import RefreshToken, User
-        from glass import app
+        from backend.database.models import RefreshToken, User
+        from code_skill import app
 
         try:
             # try get refresh token from session

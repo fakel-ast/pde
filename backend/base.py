@@ -1,10 +1,13 @@
 import os
 import sys
+from functools import wraps
 
+import jwt
 from flask import json, request, abort, render_template, current_app
 from flask.views import MethodView
 from threading import Thread
 
+from flask_login import login_user
 from flask_mail import Message
 
 from backend import mail
@@ -32,7 +35,7 @@ class MyMethodView(MethodView):
             return request.args
 
     def post(self, *args, **kwargs):
-        from greendi import app
+        from code_skill import app
         if not app.debug:
             if not self.data.get('csrf-token') or not csrf_protect(self.data.get('csrf-token')):
                 abort(403)
@@ -54,7 +57,7 @@ class ModalMixin:
     ):
         """Отложенная отправка письма c уведомлением"""
         try:
-            from greendi import app
+            from code_skill import app
             translate = {}
 
             with app.app_context():
@@ -106,3 +109,31 @@ class ModalMixin:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             current_app.logger.error(f'Ошибка отправки асинхронного письма: {e} in {format(exc_tb.tb_lineno)}')
         return True
+
+
+def user_required(func):
+    @wraps(func)
+    def decorator(*args, **kwargs):
+
+        from backend.database.models import User
+        from code_skill import app
+
+        if not app.debug:
+            token = request.headers.get('Authorization', '').split(' ')[-1]
+            if token:
+                try:
+                    data = jwt.decode(token, app.config.get('SECRET_KEY', ''), algorithms=["HS256"])
+                    user = User.select().where(User.id == data.get('user_id', '')).first()
+                    if user:
+                        login_user(user)
+                        return func(*args, **kwargs)
+                except jwt.ExpiredSignatureError:
+                    return {'errors': True, 'message': 'Token expired'}, 401
+                except Exception as e:
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    current_app.logger.error(f'Ошибка проверки jwt токена: {e} in {format(exc_tb.tb_lineno)}')
+                    return {'errors': True, 'message': 'Not valid token'}, 401
+            return {'errors': True, 'message': 'Not valid token'}, 401
+        else:
+            return func(*args, **kwargs)
+    return decorator

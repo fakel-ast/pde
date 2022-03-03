@@ -21,7 +21,7 @@ class DefaultConfig(object):
     DB_USER = os.environ.get('DB_USER', 'code_skill')
     DB_PASS = os.environ.get('DB_PASS', '')
     DB_HOST = os.environ.get('DB_HOST', 'localhost')
-    DB_PORT = os.environ.get('DB_PORT', 3366)
+    DB_PORT = os.environ.get('DB_PORT', 3306)
 
     LOG_FORMAT = logging.Formatter(
         '[%(asctime)s] %(levelname)s %(message)s [%(filename)s:%(lineno)d %(funcName)s]', '%d/%m %H:%M:%S'

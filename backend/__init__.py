@@ -9,7 +9,7 @@ from flask_mail import Mail
 
 from backend.apps.users.mixins import CustomAnonymousUserMixin
 from backend.cfg import DefaultConfig, build, logs, templates, media
-from functions import csrf_token
+from backend.functions import csrf_token
 
 
 class MyFlaskDB(FlaskDB):
@@ -55,8 +55,9 @@ def register_blueprints(app_name):
     from backend.database import models
     from backend.database.models import BaseModel
 
-    if not app_name.config.get('IS_TESTING', False):
-        pw.database.create_tables(BaseModel.__subclasses__())
+    if app_name.debug:
+        pass
+        # pw.database.create_tables(BaseModel.__subclasses__())
 
     from backend.apps.api import api
     app_name.register_blueprint(api, url_prefix='/api/v1/')
