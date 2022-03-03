@@ -33,7 +33,7 @@ export default {
     @include _desktop {
       flex-direction: row;
       flex-wrap: wrap;
-      justify-content: space-between;
+      margin-right: toRem(-21);
     }
   }
 }

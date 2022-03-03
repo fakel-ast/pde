@@ -78,8 +78,9 @@ export default {
     }
 
     @include _desktop {
-      padding: toRemMob(24) toRemMob(34) toRemMob(19) toRemMob(30);
       width: toRem(427);
+      padding: toRemMob(24) toRemMob(34) toRemMob(19) toRemMob(30);
+      margin-right: toRem(20);
       border-radius: toRem(18);
 
       &:not(:first-child) {
@@ -133,6 +134,7 @@ export default {
   &__solvings {
     font-size: toRemMob(15.6628);
     line-height: toRemMob(18);
+    color: $white-color;
 
     @include _desktop {
       font-size: toRem(22);

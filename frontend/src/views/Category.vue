@@ -50,6 +50,7 @@
 
 <script>
 import TasksList from "@/components/TasksList";
+import {Axios} from "@/assets/js/http-common";
 
 export default {
   sortTypes: [
@@ -70,119 +71,21 @@ export default {
       isOpenSortMenu: false,
       currentSortType: this.$options.sortTypes[0],
       isReverse: false,
-      tasks: [
-        {
-          id: 1,
-          created: new Date() - 10001,
-          slug: "1",
-          title: "Журналы",
-          point_count: 216,
-          is_solved: true,
-          solved_count: 1,
-        },
-        {
-          id: 2,
-          created: new Date() - 10002,
-          slug: "2",
-          title: "Cron",
-          point_count: 268,
-          is_solved: false,
-          solved_count: 1011,
-        },
-        {
-          id: 3,
-          created: new Date() - 10003,
-          slug: "3",
-          title: "Test",
-          point_count: 164,
-          is_solved: false,
-          solved_count: 1002,
-        },
-        {
-          id: 4,
-          created: new Date() - 10004,
-          slug: "4",
-          title: "Git",
-          point_count: 245,
-          is_solved: false,
-          solved_count: 13,
-        },
-        {
-          id: 5,
-          created: new Date() - 10005,
-          slug: "5",
-          title: "Repo",
-          point_count: 224,
-          is_solved: true,
-          solved_count: 14,
-        },
-        {
-          id: 6,
-          created: new Date() - 10006,
-          slug: "6",
-          title: "Admin_vol1",
-          point_count: 230,
-          is_solved: false,
-          solved_count: 17,
-        },
-        {
-          id: 7,
-          created: new Date() - 10007,
-          slug: "7",
-          title: "Docker",
-          point_count: 281,
-          is_solved: false,
-          solved_count: 0,
-        },
-        {
-          id: 8,
-          created: new Date() - 10008,
-          slug: "8",
-          title: "Image",
-          point_count: 291,
-          is_solved: false,
-          solved_count: 0,
-        },
-        {
-          id: 9,
-          created: new Date() - 10009,
-          slug: "9",
-          title: "Shiver PC",
-          point_count: 268,
-          is_solved: true,
-          solved_count: 11,
-        },
-        {
-          id: 10,
-          created: new Date() - 10010,
-          slug: "10",
-          title: "Журналы",
-          point_count: 192,
-          is_solved: false,
-          solved_count: 2,
-        },
-        {
-          id: 11,
-          created: new Date() - 10011,
-          slug: "11",
-          title: "Cron",
-          point_count: 133,
-          is_solved: false,
-          solved_count: 1,
-        },
-        {
-          id: 12,
-          created: new Date() - 10012,
-          slug: "12",
-          title: "Test",
-          point_count: 150,
-          is_solved: false,
-          solved_count: 7,
-        },
-      ],
+      tasks: [],
     };
   },
+  methods: {
+    async getTasks() {
+      try {
+        const { data } = await Axios.get(`categories/${this.$route.params.categorySlug}/tasks/`);
+        this.tasks = data?.tasks || [];
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
   created() {
+    this.getTasks();
     document.addEventListener("click", event => {
       if (!event.target.closest(".category-sort")) {
         this.isOpenSortMenu = false;

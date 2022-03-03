@@ -1,6 +1,6 @@
 <template>
   <li class="category__item">
-    <router-link :to="{ name: 'Category', params: { categorySlug: category.slug } }">
+    <router-link class="category__link" :to="{ name: 'Category', params: { categorySlug: category.slug } }">
       <div class="category__wrapper">
         <div
           :style="{
@@ -115,6 +115,11 @@ export default {
       width: toRemMob(83);
       height: toRemMob(89);
       margin-bottom: toRemMob(34);
+    }
+  }
+  &__link {
+    &:hover {
+      color: inherit !important;
     }
   }
 }
