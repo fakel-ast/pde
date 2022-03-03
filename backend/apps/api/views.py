@@ -5,7 +5,7 @@ from flask import json, request, abort, jsonify, current_app, render_template, R
 from peewee import fn, JOIN, SQL, CharField, NodeList
 from werkzeug.exceptions import BadRequest
 
-from backend.database.models import TaskCategory
+from backend.database.models import TaskCategory, Task
 from backend.functions import recursive_parse
 from backend.base import MyMethodView, CONFIG
 
@@ -20,13 +20,20 @@ class CategoriesViews(MyMethodView):
                 TaskCategory.id,
                 TaskCategory.title,
                 TaskCategory.created,
+                TaskCategory.slug,
                 fn.CONCAT(
                     CONFIG.PATH_TO_TASK_CATEGORIES_IMAGES, '/',
                     TaskCategory.id, '/',
                     TaskCategory.image
-                )
+                ),
+                fn.COUNT(Task.id.distinct()).alias('tasks_count')
+            ).join(
+                Task,
+                JOIN.LEFT_OUTER
             ).where(
                 TaskCategory.active
+            ).group_by(
+                TaskCategory.id
             ).dicts()
 
             categories = recursive_parse(list(categories))

@@ -30,7 +30,8 @@ class BaseModel(pw.Model):
 class TaskCategory(BaseModel):
     """Model for task category"""
     title = CharField(max_length=128, verbose_name='Название категории')
-    image = CharField(null=True, verbose_name='Фото категории (svg)')
+    image = CharField(max_length=128, null=True, verbose_name='Фото категории (svg)')
+    slug = CharField(max_length=128, verbose_name='Слаг')
     active = BooleanField(default=True, verbose_name='Показывать категорию')
 
     class Meta:
@@ -51,6 +52,7 @@ class Task(BaseModel):
     point_count = SmallIntegerField(default=0, verbose_name='Количество очков за решение')
     description = TextField(null=True, verbose_name='Описание')
     type = ForeignKeyField(TaskType, verbose_name='Тип задачи')
+    category = ForeignKeyField(TaskCategory, verbose_name='Категория задачи', on_delete=CASCADE)
 
     class Meta:
         table_name = TABLE_PREFIX + 'task'
