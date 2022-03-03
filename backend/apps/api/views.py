@@ -60,23 +60,24 @@ class TaskViews(MyMethodView):
             tasks = Task.select(
                 Task.id,
                 Task.created,
-                Task.title, 
+                Task.title,
                 Task.point_count,
-                Task.description,
                 fn.COUNT(UserSolvedTask.id.distinct()).alias('solved_count'),
-                fn.JSON_CONTAINS(fn.JSON_ARRAYAGG(UserSolvedTask.user_id), str(current_user.id)).alias('is_solved')
+                fn.JSON_CONTAINS(fn.JSON_ARRAYAGG(UserSolvedTask.user_id), str(current_user.id)).alias('is_solved'),
             ).join(
                 TaskCategory
             ).join_from(
                 Task,
                 UserSolvedTask,
                 JOIN.LEFT_OUTER,
-                on=((Task.id == UserSolvedTask.task_id) & (current_user.id == UserSolvedTask.user_id))
+                on=(Task.id == UserSolvedTask.task_id)
             ).where(
                 TaskCategory.slug == category_slug
             ).group_by(
                 Task.id
-            )
+            ).dicts()
+
+            tasks = recursive_parse(list(tasks))
 
             return {'errors': False, 'tasks': tasks}
 
