@@ -2,12 +2,17 @@ import logging
 import os
 from distutils.util import strtobool
 
+from dotenv import load_dotenv
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+
+load_dotenv(os.path.join(basedir, '.env'))
+
 templates = os.path.join(basedir, 'templates')
 logs = os.path.join(basedir, 'logs')
 build = os.path.join(basedir, 'build')
 media = os.path.join(basedir, 'media')
+
 
 
 class DefaultConfig(object):
