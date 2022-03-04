@@ -25,6 +25,7 @@
             :min="1"
             placeholder="Группа"
             label-by="title"
+            :class="{active: group}"
           />
         </div>
         <div class="modal__row">
@@ -70,10 +71,21 @@ export default {
       usernameError: "",
       password: "",
       passwordError: "",
-      group: {},
+      group: null,
       groups: [
         { title: "ОИБ-418", id: 1 },
         { title: "ОИБ-318", id: 2 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
         { title: "ОИБ-218", id: 3 },
       ],
     };
@@ -188,11 +200,32 @@ export default {
   width: 100%;
   padding: toRem(11) toRem(24) toRem(8) toRem(24);
   border: 1px solid $grey-color;
-  border-radius: toRem(25);
+  border-radius: toRem(25) !important;
   background-color: transparent;
   outline: none;
   font-size: toRem(22);
   line-height: toRem(25);
+
+  &.active {
+    border-color: $white-color;
+
+    .icon.arrow-downward {
+      border-color: $white-color;
+    }
+  }
+
+  &.direction-top {
+    .vue-dropdown {
+      bottom: toRem(54);
+    }
+  }
+
+  &.direction-bottom {
+    .vue-dropdown {
+      top: toRem(54);
+    }
+  }
+
 }
 
 .vue-input {
@@ -203,34 +236,71 @@ export default {
   input[placeholder="Группа"]::placeholder {
     color: $grey-color;
   }
+
 }
 
 .vue-dropdown {
-  border-radius: 5px;
+  max-height: toRem(200) !important;
+  padding: toRem(31) toRem(20) toRem(27) toRem(21);
+  border-radius: toRem(19);
+  box-shadow: 5px 5px 17px 5px rgba(0, 0, 0, 0.15);
+  border: none;
   box-sizing: border-box;
-  background: #ddd;
+  background: $dark-grey-color;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    margin-top: toRem(5);
+    margin-bottom: toRem(12);
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    //max-height: toRem(1);
+    border: 5px solid $grey-color;
+    border-radius: toRem(5);
+    padding-top: 100px;
+  }
+
 
   &-item {
-    padding: toRem(10);
+    font-size: toRem(22);
+    line-height: toRem(25);
     text-align: left;
 
-    &:hover {
-      background-color: #ebedef !important;
-    }
-
     &:not(:last-child) {
-      border-bottom: 1px solid #ccc;
+      margin-bottom: toRem(34);
     }
 
+    &:hover {
+      color: $blue-color;
+    }
 
     &.selected {
       background-color: transparent !important;
+      color: $white-color;
     }
 
     &.highlighted {
       background-color: transparent;
-
     }
+  }
+}
+
+.icon.arrow-downward {
+  width: toRem(10);
+  height: toRem(10);
+  margin-top: toRem(-4);
+  transform: rotate(-45deg);
+  border: none;
+  border-bottom: 1px solid $grey-color;
+  border-left: 1px solid $grey-color;
+
+  &.active {
+    margin-top: toRem(6);
+    transform: rotate(180-45deg);
   }
 }
 </style>
