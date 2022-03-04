@@ -1,16 +1,21 @@
 import os
 import sys
+import uuid
+from datetime import datetime, timedelta
 from functools import wraps
 
 import jwt
-from flask import json, request, abort, render_template, current_app
+from flask import json, request, abort, render_template, current_app, session
 from flask.views import MethodView
 from threading import Thread
 
 from flask_login import login_user
 from flask_mail import Message
+from peewee import fn
+from playhouse.shortcuts import model_to_dict
 
 from backend import mail
+from backend.database.models import User, Session
 from backend.functions import csrf_protect, validate_json, get_ip
 from backend.cfg import DefaultConfig
 
@@ -118,22 +123,44 @@ def user_required(func):
         from backend.database.models import User
         from code_skill import app
 
-        if not app.debug:
-            token = request.headers.get('Authorization', '').split(' ')[-1]
-            if token:
+        if app.debug:
+            session_token = session.get('session_token') or ''
+            if session_token:
                 try:
-                    data = jwt.decode(token, app.config.get('SECRET_KEY', ''), algorithms=["HS256"])
-                    user = User.select().where(User.id == data.get('user_id', '')).first()
+                    user = User.select(
+                        User
+                    ).join(Session).where(
+                        Session.session == session_token
+                    ).objects().first()
+
                     if user:
                         login_user(user)
                         return func(*args, **kwargs)
-                except jwt.ExpiredSignatureError:
-                    return {'errors': True, 'message': 'Token expired'}, 401
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
-                    current_app.logger.error(f'Ошибка проверки jwt токена: {e} in {format(exc_tb.tb_lineno)}')
-                    return {'errors': True, 'message': 'Not valid token'}, 401
-            return {'errors': True, 'message': 'Not valid token'}, 401
+                    current_app.logger.error(f'Ошибка session token: {e} in {format(exc_tb.tb_lineno)}')
+            return {'errors': True, 'message': 'Not valid session token'}, 403
         else:
             return func(*args, **kwargs)
+
     return decorator
+
+
+def auth_user(user: User, *args, **kwargs):
+    try:
+        login_user(user, remember=True)
+
+        # save refresh token in session
+        session_token = uuid.uuid4()
+        session['session_token'] = session_token
+        # Save token in bd. Or replace if this user_id exists
+        Session \
+            .insert(session=session_token, user_id=user.id) \
+            .on_conflict('replace') \
+            .execute()
+        return {'errors': False}
+
+    except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        current_app.logger.error(f'{e} in {format(exc_tb.tb_lineno)}')
+        return {'errors': True, 'message': f'Code error'}, 500

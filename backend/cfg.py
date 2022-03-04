@@ -27,3 +27,4 @@ class DefaultConfig(object):
 
     PATH_TO_TASK_CATEGORIES_IMAGES = os.path.join('media', 'task_categories').replace('\\', '/')
     PATH_TO_TASK_TASK = os.path.join('media', 'tasks').replace('\\', '/')
+    PATH_TO_USER_AVATAR = os.path.join('media', 'avatars').replace('\\', '/')

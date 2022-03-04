@@ -1,14 +1,15 @@
 import logging
 import os
+from datetime import timedelta
 
-from flask import Flask, send_from_directory, request, render_template
+from flask import Flask, send_from_directory, request, render_template, session
 from flask_cors import CORS
 from flask_login import LoginManager
 from peewee import MySQLDatabase
 from playhouse.flask_utils import FlaskDB
 from flask_mail import Mail
 
-from backend.apps.users.mixins import CustomAnonymousUserMixin
+from backend.mixins import CustomAnonymousUserMixin
 from backend.cfg import DefaultConfig, build, logs, templates, media
 from backend.functions import csrf_token
 
@@ -126,3 +127,8 @@ def application_routes(app):
     def file_robot():
         """Маршрут выдачи файлов для роботов и фавиконов"""
         return send_from_directory(os.path.join(build), request.path[1:], as_attachment=True)
+
+    @app.before_request
+    def make_session_permanent():
+        session.permanent = True
+        app.permanent_session_lifetime = timedelta(days=30)

@@ -1,8 +1,10 @@
+import json
+
 from peewee import DateTimeField, CharField, IntegerField, BooleanField, ForeignKeyField, SmallIntegerField, TextField
 from datetime import datetime
 
 from backend import pw, login
-from backend.apps.users.mixins import CustomUserMixin
+from backend.mixins import CustomUserMixin
 
 TABLE_PREFIX = 'cs__'
 CASCADE = 'CASCADE'
@@ -88,7 +90,7 @@ class Group(BaseModel):
 
 
 class User(BaseModel, CustomUserMixin):
-    username = CharField(25, verbose_name='Логин')
+    username = CharField(64, verbose_name='Логин', unique=True)
     fio = CharField(256, verbose_name='ФИО пользователя', null=True)
     email = CharField(max_length=256, verbose_name='Email')
     password = CharField(256, verbose_name='Пароль')
@@ -125,13 +127,13 @@ class TaskAnswer(BaseModel):
         table_name = TABLE_PREFIX + 'task_answer'
 
 
-class RefreshToken(BaseModel):
-    """Refresh tokens"""
-    token = CharField(max_length=64, verbose_name='refresh token')
+class Session(BaseModel):
+    """Session tokens"""
+    session = CharField(max_length=64, verbose_name='Session')
     user = ForeignKeyField(User, on_delete='CASCADE', unique=True)
 
     class Meta:
-        table_name = TABLE_PREFIX + 'refresh_token'
+        table_name = TABLE_PREFIX + 'session'
 
 
 @login.user_loader
