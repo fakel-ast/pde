@@ -100,8 +100,6 @@ def application_routes(app):
     """Глобальные маршруты"""
 
     @app.route('/', defaults={'path': ''})
-    @app.route('/<language>/', defaults={'path': ''})
-    @app.route('/<language>/greenhouses/<greenhouse_slug>', defaults={'path': ''})
     def index(path, *args, **kwargs):
         return render_template('index.html')
 
