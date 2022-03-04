@@ -29,7 +29,6 @@ class CategoriesViews(MyMethodView):
                 TaskCategory.slug,
                 fn.CONCAT(
                     CONFIG.PATH_TO_TASK_CATEGORIES_IMAGES, '/',
-                    TaskCategory.id, '/',
                     TaskCategory.image
                 ),
                 fn.COUNT(Task.id.distinct()).alias('tasks_count')
@@ -96,10 +95,11 @@ class TasksViews(MyMethodView):
 
 class TaskViews(MyMethodView):
 
-    def get(self, task_id: str, *args, **kwargs):
+    def get(self, task_id: str, category_slug: str, *args, **kwargs):
         """
         Get tasks
         :param task_id: task's id
+        :param category_slug: slug TaskCategory
         """
 
         try:
@@ -122,6 +122,7 @@ class TaskViews(MyMethodView):
                         '[',
                         fn.GROUP_CONCAT(
                             fn.JSON_OBJECT(
+                                'file_link', SQL('task_file_join.file_link'),
                                 'file', SQL('task_file_join.file'),
                                 'size', SQL('task_file_join.size'),
                             ).distinct()
@@ -178,11 +179,12 @@ class TaskViews(MyMethodView):
                     TaskFile.task_id,
                     TaskFile.order,
                     TaskFile.size,
+                    TaskFile.file.alias('file'),
                     fn.CONCAT(
                         CONFIG.PATH_TO_TASK_TASK, '/',
                         TaskFile.task_id, '/files/',
                         TaskFile.file
-                    ).alias('file'),
+                    ).alias('file_link'),
                 ).alias('task_file_join'),
                 JOIN.LEFT_OUTER,
                 on=(Task.id == SQL('task_file_join.task_id'))
@@ -198,11 +200,17 @@ class TaskViews(MyMethodView):
             ).join_from(
                 Task,
                 TaskType
+            ).join_from(
+                Task,
+                TaskCategory
             ).where(
-                Task.id == task_id
+                Task.id == task_id, TaskCategory.slug == category_slug
             ).group_by(
                 Task.id
             ).dicts().first()
+
+            if not task:
+                return {'errors': True, 'message': 'Not valid task\'s id'}, 404
 
             task = recursive_parse(task)
 
