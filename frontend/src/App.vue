@@ -1,5 +1,11 @@
 <template>
   <header-component/>
+  <modal-login
+    ref="modalLogin"
+  />
+  <modal-register
+    ref="modalRegister"
+  />
   <router-view
     :categories="categories"
     :get-solved-suffix="getSolvedSuffix"
@@ -11,6 +17,8 @@
 <script>
 import HeaderComponent from "@/components/HeaderComponent";
 import FooterComponent from "@/components/FooterComponent";
+import ModalLogin from "@/components/modal/ModalLogin";
+import ModalRegister from "@/components/modal/ModalRegister";
 import {Axios} from "@/assets/js/http-common";
 
 export default {
@@ -18,9 +26,14 @@ export default {
   components: {
     FooterComponent,
     HeaderComponent,
+    ModalLogin,
+    ModalRegister,
   },
   created() {
     this.getCategories();
+  },
+  mounted() {
+    this.$refs.modalRegister.open();
   },
   data() {
     return {
@@ -68,6 +81,7 @@ a {
 
 
 .link {
+  cursor: pointer;
   transition: color .2s ease;
 
   &:active {
@@ -179,5 +193,22 @@ body {
 
 .error-text {
   color: $red-color;
+}
+
+.form-input {
+  flex-basis: 100%;
+  width: 100%;
+  padding: toRem(11) toRem(24) toRem(8) toRem(24);
+  border: 1px solid $grey-color;
+  border-radius: toRem(25);
+  background-color: transparent;
+  color: $white-color;
+  outline: none;
+  font-size: toRem(22);
+  line-height: toRem(25);
+
+  &::placeholder {
+    color: $grey-color;
+  }
 }
 </style>

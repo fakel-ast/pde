@@ -78,7 +78,7 @@
               Вставьте ответ в поле:
             </label>
             <form class="answer-form__form">
-              <input id="answer" type="text" class="answer-form__input" name="answer" placeholder="Ваш ответ"/>
+              <input id="answer" type="text" class="answer-form__input form-input" name="answer" placeholder="Ваш ответ"/>
               <button class="button answer-form__button">Проверить</button>
             </form>
           </div>
@@ -553,19 +553,6 @@ export default {
   }
 
   &__input {
-    flex-basis: 100%;
-    padding: toRem(11) toRem(24) toRem(8) toRem(24);
-    border: 1px solid $grey-color;
-    border-radius: toRem(25);
-    background-color: transparent;
-    color: $white-color;
-    outline: none;
-    font-size: toRem(22);
-    line-height: toRem(25);
-
-    &::placeholder {
-      color: $grey-color;
-    }
   }
 
   &__button {
