@@ -10,6 +10,7 @@
   "dependencies": {
     "codemirror": "^5.65.2",
     "core-js": "^3.6.5",
+    "filesize": "^8.0.7",
     "reset-css": "^5.0.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
