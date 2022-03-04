@@ -181,7 +181,7 @@
           </slide-up-down>
         </div>
       </div>
-      <h1 class="page-title only-mobile">Журналы</h1>
+      <h1 class="page-title only-mobile">{{ task.title }}</h1>
       <div class="task-detail__additional">
         <div class="task-detail__info">
           <p class="task-detail__status">
