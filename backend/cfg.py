@@ -14,7 +14,6 @@ build = os.path.join(basedir, 'build')
 media = os.path.join(basedir, 'media')
 
 
-
 class DefaultConfig(object):
     SECRET_KEY = os.environ.get('SECRET_KEY', '124;e6ef6a1231239258$c8$c4a1!56#8')
 
