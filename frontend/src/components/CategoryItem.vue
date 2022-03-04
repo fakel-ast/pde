@@ -5,7 +5,7 @@
         <div
           :style="{
             'mask-image': `url(${category.image})`,
-            '-webkit-mask-image': `url(${category.image})`,
+            '-webkit-mask-image': `url(${$host}${category.image})`,
           }"
           class="category__image"
         ></div>
@@ -117,6 +117,7 @@ export default {
       margin-bottom: toRemMob(34);
     }
   }
+
   &__link {
     &:hover {
       color: inherit !important;

@@ -2,55 +2,47 @@
   <section class="section-task-detail">
     <div class="container task-detail-container">
       <div class="task-detail__content task-content">
-        <h1 class="page-title only-desktop">Журналы</h1>
+        <h1 class="page-title only-desktop">
+          {{ task.title }}
+        </h1>
         <div class="task-content__description task-description">
           <p class="task-description__title">
             Описание задачи:
           </p>
-          <div class="task-description__text">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat.
-            </p>
-            <p>
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-              laborum.
-            </p>
-            <ul>
-              <li>Duis aute irure dolor</li>
-              <li>Duis aute irure dolor</li>
-              <li>Duis aute irure dolor</li>
-            </ul>
+          <div class="task-description__text" v-html="task.description">
+
           </div>
         </div>
-        <div class="task-content__files task-files task-content-block">
+        <div v-if="task.files" class="task-content__files task-files task-content-block">
           <div class="task-files__header">
             <p class="task-files__title task-content__title">Файл</p>
             <p class="task-files__title task-content__title">Размер файла</p>
           </div>
           <div class="task-files__footer">
             <ul class="task-files__list">
-              <li class="task-files__item">
-                <a href="#" class="task-files__file">fhq2015-error_log</a>
-                <p class="task-files__size">4096 байт</p>
-              </li>
-              <li class="task-files__item">
-                <a href="#" class="task-files__file">fhq2015-access_log</a>
-                <p class="task-files__size">32642 байта</p>
+              <li
+                v-for="file in task.files"
+                :key="file.file"
+                class="task-files__item"
+              >
+                <a :href="$host + file.file_link" class="task-files__file link">
+                  {{ file.file }}
+                </a>
+                <p class="task-files__size">
+                  {{ getFileSize(file.size) }}
+                </p>
               </li>
             </ul>
           </div>
         </div>
-        <div class="task-content__hints task-hints task-content-block">
+        <div v-if="task.hints" class="task-content__hints task-hints task-content-block">
           <div class="task-hints__header" @click="isOpenHints = !isOpenHints">
             <p class="task-hints__title task-content__title">
               Подсказки
             </p>
             <div class="task-hints__info">
               <div class="task-hints__bubble task-hints__count">
-                1
+                {{ task.hints.length }}
               </div>
               <div
                 :class="{opened: isOpenHints}"
@@ -61,11 +53,12 @@
           </div>
           <slide-up-down tag="div" v-model="isOpenHints" :duration="durationTime" class="task-hints__content">
             <ul class="task-hints__list">
-              <li class="task-hints__item">
-                Подсказка 1: 2015.freehackquest.com
-              </li>
-              <li class="task-hints__item">
-                Подсказка 2: 2015.freehackquest.com
+              <li
+                v-for="(hint, index) in task.hints"
+                :key="`task-hint-${hint.text}`"
+                class="task-hints__item"
+              >
+                Подсказка {{ index + 1 }}: {{ hint.text }}
               </li>
             </ul>
           </slide-up-down>
@@ -78,7 +71,7 @@
           </div>
           <div class="task-answers__not-auth not-auth">
             <span class="not-auth__text">Для этого&nbsp;</span>
-            <a class="not-auth__link" href="#">войдите или зарегистрируйтесь!</a>
+            <a class="not-auth__link link" href="#">войдите или зарегистрируйтесь!</a>
           </div>
           <div class="task-answers__answer answer-form">
             <label for="answer" class="answer-form__title">
@@ -192,13 +185,13 @@
       <div class="task-detail__additional">
         <div class="task-detail__info">
           <p class="task-detail__status">
-            Статус: решена
+            Статус: {{ task.is_solved ? "решена" : "не решена" }}
           </p>
           <p class="task-detail__resolve-count">
-            Решило 542 человека
+            {{ `${getSolvedSuffix(task.solved_count)} ${task.solved_count} ${getUsersSuffix(task.solved_count)}` }}
           </p>
           <p class="task-detail__point-count">
-            Очки: +100
+            Очки: +{{ task.point_count }}
           </p>
         </div>
         <button class="task-detail__button button button-red">
@@ -210,6 +203,8 @@
 </template>
 
 <script>
+const filesize = require("filesize");
+
 import SlideUpDown from "vue3-slide-up-down";
 
 // CodeMirror
@@ -223,11 +218,13 @@ import "codemirror/addon/scroll/simplescrollbars.css";
 import "codemirror/addon/hint/show-hint.css";
 import "codemirror/addon/hint/show-hint.js";
 import "codemirror/addon/hint/anyword-hint";
+import {Axios} from "@/assets/js/http-common";
 
 export default {
   name: "TaskDetail",
   props: {
-    categories: Array,
+    getSolvedSuffix: Function,
+    getUsersSuffix: Function,
   },
   components: {
     SlideUpDown,
@@ -239,7 +236,11 @@ export default {
       durationTime: 300,
       code: "",
       codeMirror: null,
+      task: {},
     };
+  },
+  created() {
+    this.getTaskDetail();
   },
   mounted() {
     if (this.$refs.codeTextArea) {
@@ -251,6 +252,21 @@ export default {
         scrollbarStyle: "overlay",
       });
     }
+  },
+  methods: {
+    async getTaskDetail() {
+      try {
+        const { data } = await Axios.get(
+          `/categories/${this.$route.params.categorySlug}/tasks/${this.$route.params.taskId}/`,
+        );
+        this.task = data?.task || {};
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    getFileSize(size) {
+      return filesize(size);
+    },
   },
 };
 </script>
@@ -523,6 +539,7 @@ export default {
     color: $sea-color;
   }
 }
+
 .answer-form {
   &__title {
     display: block;
@@ -664,6 +681,38 @@ export default {
 </style>
 
 <style lang="scss">
+
+.task-description {
+
+
+  &__text {
+    p {
+      margin-bottom: toRemMob(27);
+      @include _desktop {
+        margin-bottom: toRem(32);
+      }
+    }
+
+    ul {
+
+    }
+
+    li {
+
+      &::before {
+        content: "• "; /* Добавляем в качестве маркера символ */
+      }
+
+      &:not(:first-child) {
+        margin-top: toRemMob(28);
+        @include _desktop {
+          margin-top: toRem(28);
+        }
+      }
+    }
+  }
+}
+
 .CodeMirror {
   width: 100%;
   height: toRem(453);

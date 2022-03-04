@@ -42,7 +42,11 @@
         </div>
       </div>
       <div class="category__tasks tasks">
-        <tasks-list :tasks="sortedTasks" :current-category="currentCategory"/>
+        <tasks-list
+          :tasks="sortedTasks" :current-category="currentCategory"
+          :get-solved-suffix="getSolvedSuffix"
+          :get-users-suffix="getUsersSuffix"
+        />
       </div>
     </div>
   </section>
@@ -62,6 +66,8 @@ export default {
   name: "Category",
   props: {
     categories: Object,
+    getSolvedSuffix: Function,
+    getUsersSuffix: Function,
   },
   components: {
     TasksList,
@@ -98,6 +104,8 @@ export default {
       const sortTypeValue = this.currentSortType.value || "point_count";
       if (sortTypeValue === "title") {
         tasks = tasks.sort((a, b) => a[sortTypeValue].localeCompare(b[sortTypeValue]));
+      } else if (sortTypeValue === "created") {
+        tasks = tasks.sort((a, b) => new Date(a[sortTypeValue]) - new Date(b[sortTypeValue]));
       } else {
         tasks = tasks.sort((a, b) => a[sortTypeValue] - b[sortTypeValue]);
       }

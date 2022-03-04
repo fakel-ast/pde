@@ -9,7 +9,7 @@
           <nav class="footer-nav footer-nav">
             <ul class="footer-nav__list">
               <li class="footer-nav__item">
-                <router-link class="footer-nav__link footer-link" to="/asdasd/">Задачи</router-link>
+                <router-link class="footer-nav__link footer-link" :to="{name: 'Categories'}">Задачи</router-link>
               </li>
               <li class="footer-nav__item">
                 <router-link class="footer-nav__link footer-link" to="/asdasd/">Рейтинг</router-link>
@@ -34,7 +34,9 @@
                 :key="`catgory-${category.id}`"
                 class="footer-directions__item"
               >
-                <router-link class="footer-link" to="/asdas/">{{ category.title }}</router-link>
+                <router-link class="footer-link" :to="{ name: 'Category', params: { categorySlug: category.slug } }">
+                  {{ category.title }}
+                </router-link>
               </li>
             </ul>
           </div>

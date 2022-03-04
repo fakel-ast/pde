@@ -5,6 +5,8 @@
       :key="`task-${task.id}`"
       :task="task"
       :current-category="currentCategory"
+      :get-solved-suffix="getSolvedSuffix"
+      :get-users-suffix="getUsersSuffix"
     />
   </ul>
 </template>
@@ -17,6 +19,8 @@ export default {
   props: {
     tasks: Array,
     currentCategory: Object,
+    getSolvedSuffix: Function,
+    getUsersSuffix: Function,
   },
   components: {
     TaskComponent,

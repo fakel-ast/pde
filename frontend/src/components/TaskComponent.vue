@@ -27,22 +27,10 @@ export default {
   props: {
     task: Object,
     currentCategory: Object,
+    getSolvedSuffix: Function,
+    getUsersSuffix: Function,
   },
-  methods: {
-    getSolvedSuffix(count) {
-      count = count.toString();
-      if (count[count.length - 1] === "1" && count.slice(count.length - 2) !== "11") return "Решил";
-      return "Решило";
-    },
-    getUsersSuffix(count) {
-      count = count.toString();
-      if (count[count.length - 1] === "1" && count.slice(count.length - 2) !== "11") return "пользователь";
-      else if (["2", "3", "4"].includes(count[count.length - 1]) && !["12", "13", "14"].includes(count.slice(count.length - 2))) {
-        return "пользователя";
-      }
-      return "пользователей";
-    },
-  },
+  methods: {},
 };
 </script>
 

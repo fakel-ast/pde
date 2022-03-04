@@ -1,6 +1,10 @@
 <template>
   <header-component/>
-  <router-view :categories="categories"/>
+  <router-view
+    :categories="categories"
+    :get-solved-suffix="getSolvedSuffix"
+    :get-users-suffix="getUsersSuffix"
+  />
   <footer-component :categories="categories"/>
 </template>
 
@@ -32,6 +36,19 @@ export default {
         console.error(error);
       }
     },
+    getSolvedSuffix(count) {
+      count = (count || 0).toString();
+      if (count[count.length - 1] === "1" && count.slice(count.length - 2) !== "11") return "Решил";
+      return "Решило";
+    },
+    getUsersSuffix(count) {
+      count = (count || 0).toString();
+      if (count[count.length - 1] === "1" && count.slice(count.length - 2) !== "11") return "пользователь";
+      else if (["2", "3", "4"].includes(count[count.length - 1]) && !["12", "13", "14"].includes(count.slice(count.length - 2))) {
+        return "пользователя";
+      }
+      return "пользователей";
+    },
   },
 };
 </script>
@@ -47,6 +64,10 @@ export default {
 a {
   text-decoration: none;
   color: $white-color;
+}
+
+
+.link {
   transition: color .2s ease;
 
   &:active {
@@ -56,6 +77,7 @@ a {
 
   &:hover {
     color: $blue-color;
+    text-decoration: underline;
   }
 }
 

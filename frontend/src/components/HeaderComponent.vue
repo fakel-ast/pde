@@ -9,7 +9,7 @@
     <nav class="header__nav">
       <ul class="header__list">
         <li class="header__item">
-          <a class="header__link" href="#">Задачи</a>
+          <router-link class="header__link" :to="{ name: 'Categories' }">Задачи</router-link>
         </li>
         <li class="header__item">
           <a class="header__link" href="#">Рейтинг</a>
