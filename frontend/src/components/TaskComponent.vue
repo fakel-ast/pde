@@ -45,11 +45,14 @@ export default {
     transition: background-color 0.2s ease;
 
     &.solved {
-      background-color: $green-color-two;
       color: $white-color;
 
       .task__points {
         color: $white-color;
+      }
+
+      .task__solvings {
+        color: $green-color;
       }
     }
 
