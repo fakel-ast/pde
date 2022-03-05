@@ -11,10 +11,17 @@
     <template #modal-content>
       <form class="modal__form">
         <div class="modal__row">
-          <input class="modal__input form-input" placeholder="Имя пользователя" type="text" name="username"/>
+          <input class="modal__input form-input" v-model="username" placeholder="Имя пользователя" type="text"
+                 name="username"/>
+          <div class="modal__error" v-if="usernameError.length">
+            {{ usernameError }}
+          </div>
         </div>
         <div class="modal__row">
-          <input class="modal__input form-input" placeholder="E-mail" type="text" name="email"/>
+          <input class="modal__input form-input" v-model="email" placeholder="E-mail" type="text" name="email"/>
+          <div class="modal__error" v-if="emailError.length">
+            {{ usernameError }}
+          </div>
         </div>
         <div class="modal__row">
           <vue-next-select
@@ -25,7 +32,7 @@
             :min="1"
             placeholder="Группа"
             label-by="title"
-            :class="{active: group}"
+            :class="{ active: group }"
           />
         </div>
         <div class="modal__row">
@@ -69,24 +76,26 @@ export default {
     return {
       username: "",
       usernameError: "",
+      email: "",
+      emailError: "",
       password: "",
       passwordError: "",
       group: null,
       groups: [
-        { title: "ОИБ-418", id: 1 },
-        { title: "ОИБ-318", id: 2 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
+        {title: "ОИБ-418", id: 1},
+        {title: "ОИБ-318", id: 2},
+        {title: "ОИБ-218", id: 3},
+        {title: "ОИБ-218", id: 3},
+        {title: "ОИБ-218", id: 3},
+        {title: "ОИБ-218", id: 3},
+        {title: "ОИБ-218", id: 3},
+        {title: "ОИБ-218", id: 3},
+        {title: "ОИБ-218", id: 3},
+        {title: "ОИБ-218", id: 3},
+        {title: "ОИБ-218", id: 3},
+        {title: "ОИБ-218", id: 3},
+        {title: "ОИБ-218", id: 3},
+        {title: "ОИБ-218", id: 3},
       ],
     };
   },
@@ -99,7 +108,7 @@ export default {
     },
     fioValidation() {
       if (!this.fio.length) {
-        this.fioError = "Enter fio TRANSLATE SUKA";
+        this.fioError = "Введите имя";
         return false;
       }
       this.fioError = "";
@@ -147,6 +156,16 @@ export default {
       });
     },
   },
+  computed: {
+    isValidForm() {
+      this.fioValidation();
+      this.phoneValidation();
+      this.emailValidation();
+      this.addressValidation();
+      this.commentValidation();
+      return !(this.fioError.length || this.phoneError.length || this.emailError.length || this.addressError.length || this.commentValidation.length);
+    }
+  }
 };
 </script>
 
@@ -257,6 +276,7 @@ export default {
     margin-bottom: toRem(12);
     background-color: transparent;
   }
+
   &::-webkit-scrollbar-thumb {
     //max-height: toRem(1);
     border: 5px solid $grey-color;
