@@ -99,8 +99,10 @@ def application_context_processor(app):
 def application_routes(app):
     """Глобальные маршруты"""
 
-    @app.route('/', defaults={'path': ''})
-    def index(path, *args, **kwargs):
+    @app.route('/')
+    @app.route('/<category_slug>/', defaults={'category_slug': ''})
+    @app.route('/<category_slug>/<task_id>', defaults={'category_slug': '', 'task_id': ''})
+    def index(category_slug: str = '', task_id: str = '', *args, **kwargs):
         return render_template('index.html')
 
     @app.route('/build/<path:path>')
