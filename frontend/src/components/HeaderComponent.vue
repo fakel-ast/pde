@@ -17,7 +17,7 @@
       </ul>
     </nav>
     <div class="header__profile header-profile">
-      <button class="header-profile__button button">Войти/Регистрация</button>
+      <button @click="openModalLogin" class="header-profile__button button">Войти/Регистрация</button>
     </div>
     <div
       @click="isOpenMenu = !isOpenMenu"
@@ -39,6 +39,9 @@
 <script>
 export default {
   name: "HeaderComponent",
+  props: {
+    openModalLogin: Function,
+  },
   data() {
     return {
       isOpenMenu: false,

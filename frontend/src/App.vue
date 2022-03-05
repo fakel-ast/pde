@@ -1,10 +1,13 @@
 <template>
-  <header-component/>
+  <header-component :open-modal-login="openModalLogin"/>
   <modal-login
     ref="modalLogin"
+    :open-modal-register="openModalRegister"
+
   />
   <modal-register
     ref="modalRegister"
+    :open-modal-login="openModalLogin"
   />
   <router-view
     :categories="categories"
@@ -32,9 +35,6 @@ export default {
   created() {
     this.getCategories();
   },
-  mounted() {
-    this.$refs.modalRegister.open();
-  },
   data() {
     return {
       categories: [],
@@ -61,6 +61,44 @@ export default {
         return "пользователя";
       }
       return "пользователей";
+    },
+    async sendModalLogin(data) {
+      console.log(data);
+    },
+    async sendModalRegister(data) {
+      console.log(data);
+    },
+    async openModalLogin() {
+      this.$refs.modalRegister.close();
+      const modalResult = await this.$refs.modalLogin.open();
+      if (modalResult && Object.entries(modalResult).length) {
+        // Fake send form to backend
+        const result = await this.sendModalLogin(modalResult);
+        // if success back response show success and close modal, else show error
+        if (result) {
+          await this.$refs.modalLogin.showSuccess();
+        } else {
+          await this.$refs.modalLogin.showError();
+          // Тут костыль небольшой. Что бы повторить все эти действия, мы вызываем сам себя :)
+          this.openModalLogin();
+        }
+      }
+    },
+    async openModalRegister() {
+      this.$refs.modalLogin.close();
+      const modalResult = await this.$refs.modalRegister.open();
+      if (modalResult && Object.entries(modalResult).length) {
+        // Fake send form to backend
+        const result = await this.sendModalRegister(modalResult);
+        // if success back response show success and close modal, else show error
+        if (result) {
+          await this.$refs.modalRegister.showSuccess();
+        } else {
+          await this.$refs.modalRegister.showError();
+          // Тут костыль небольшой. Что бы повторить все эти действия, мы вызываем сам себя :)
+          this.openModalRegister();
+        }
+      }
     },
   },
 };

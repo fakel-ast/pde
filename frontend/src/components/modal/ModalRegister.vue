@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="modal__row">
-          <input class="modal__input form-input" v-model="email" placeholder="E-mail" type="text" name="email"/>
+          <input class="modal__input form-input" v-model="email" placeholder="E-mail" type="email" name="email"/>
           <div class="modal__error" v-if="emailError.length">
             {{ usernameError }}
           </div>
@@ -36,21 +36,19 @@
           />
         </div>
         <div class="modal__row">
-          <input class="modal__input form-input" placeholder="Пароль" type="text" name="password"/>
+          <input class="modal__input form-input" placeholder="Пароль" type="password" name="password"/>
         </div>
       </form>
-
-      <p class="modal__text forgot-password">
-        Забыли пароль?
-      </p>
 
     </template>
     <template #modal-confirm>
       <div class="modal__confirm">
-        <button class="modal__button button">Войти</button>
+        <button class="modal__button button">
+          Зарегистрироваться
+        </button>
       </div>
-      <p class="link modal__another-modal">
-        Регистрация
+      <p @click="openModalLogin" class="link modal__another-modal">
+        Уже есть аккаунт?
       </p>
     </template>
   </modal-base>
@@ -69,8 +67,7 @@ export default {
     VueNextSelect,
   },
   props: {
-    getTranslateJsonField: Function,
-    wordTranslation: Function,
+    openModalLogin: Function,
   },
   data() {
     return {
@@ -82,20 +79,20 @@ export default {
       passwordError: "",
       group: null,
       groups: [
-        {title: "ОИБ-418", id: 1},
-        {title: "ОИБ-318", id: 2},
-        {title: "ОИБ-218", id: 3},
-        {title: "ОИБ-218", id: 3},
-        {title: "ОИБ-218", id: 3},
-        {title: "ОИБ-218", id: 3},
-        {title: "ОИБ-218", id: 3},
-        {title: "ОИБ-218", id: 3},
-        {title: "ОИБ-218", id: 3},
-        {title: "ОИБ-218", id: 3},
-        {title: "ОИБ-218", id: 3},
-        {title: "ОИБ-218", id: 3},
-        {title: "ОИБ-218", id: 3},
-        {title: "ОИБ-218", id: 3},
+        { title: "ОИБ-418", id: 1 },
+        { title: "ОИБ-318", id: 2 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
+        { title: "ОИБ-218", id: 3 },
       ],
     };
   },
@@ -164,8 +161,8 @@ export default {
       this.addressValidation();
       this.commentValidation();
       return !(this.fioError.length || this.phoneError.length || this.emailError.length || this.addressError.length || this.commentValidation.length);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -261,9 +258,10 @@ export default {
 .vue-dropdown {
   max-height: toRem(200) !important;
   padding: toRem(31) toRem(20) toRem(27) toRem(21);
-  border-radius: toRem(19);
+  border-radius: toRem(19) !important;
   box-shadow: 5px 5px 17px 5px rgba(0, 0, 0, 0.15);
   border: none;
+  border-right: toRem(16) solid transparent;
   box-sizing: border-box;
   background: $dark-grey-color;
 
@@ -272,8 +270,8 @@ export default {
   }
 
   &::-webkit-scrollbar-track {
-    margin-top: toRem(5);
-    margin-bottom: toRem(12);
+    margin-top: toRem(2);
+    margin-bottom: toRem(2);
     background-color: transparent;
   }
 

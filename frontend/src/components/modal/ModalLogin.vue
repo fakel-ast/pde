@@ -14,7 +14,7 @@
           <input class="modal__input form-input" placeholder="Имя пользователя" type="text" name="username"/>
         </div>
         <div class="modal__row">
-          <input class="modal__input form-input" placeholder="Пароль" type="text" name="password"/>
+          <input class="modal__input form-input" placeholder="Пароль" type="password" name="password"/>
         </div>
       </form>
 
@@ -27,7 +27,7 @@
       <div class="modal__confirm">
         <button class="modal__button button">Войти</button>
       </div>
-      <p class="link modal__another-modal">
+      <p @click="openModalRegister" class="link modal__another-modal">
         Регистрация
       </p>
     </template>
@@ -44,8 +44,7 @@ export default {
     ModalBase,
   },
   props: {
-    getTranslateJsonField: Function,
-    wordTranslation: Function,
+    openModalRegister: Function,
   },
   data() {
     return {

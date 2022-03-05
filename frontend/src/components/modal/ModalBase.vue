@@ -73,7 +73,7 @@ export default {
     },
     close() {
       this.toggleBlockScroll(false);
-      this.$options.currentModalController.resolve(false);
+      this.$options.currentModalController?.resolve(false);
       this.isOpen = false;
       this.$emit("close");
     },
