@@ -125,6 +125,7 @@ export default {
   height: 100%;
   color: $grey-color;
   background-color: rgba(0, 0, 0, .5);
+  text-align: center;
 
   &__body {
     background-color: $dark-grey-color;
@@ -137,7 +138,6 @@ export default {
       min-width: toRem(427);
       padding: toRem(44) toRem(36) toRem(36) toRem(36);
       border-radius: toRem(19);
-
     }
   }
 
@@ -155,7 +155,53 @@ export default {
     &-active {
       color: $white-color;
     }
+  }
 
+  &__header {
+    margin-bottom: toRem(30);
+    @include _desktop {
+      margin-bottom: toRem(41);
+    }
+  }
+
+  &__form {
+    margin-bottom: toRemMob(22);
+    @include _desktop {
+      margin-bottom: toRemMob(30);
+    }
+  }
+
+  &__row {
+    position: relative;
+
+    &:not(:last-child) {
+      margin-bottom: toRemMob(22);
+      @include _desktop {
+        margin-bottom: toRemMob(30);
+      }
+    }
+  }
+
+  &__error {
+    position: absolute;
+    bottom: toRem(-20);
+    left: toRem(24);
+    font-size: toRem(14);
+    color: $red-color;
+  }
+
+  &__confirm {
+    margin-top: toRemMob(30);
+    @include _desktop {
+      margin-top: toRem(30);
+    }
+  }
+
+  &__another-modal {
+    margin-top: toRemMob(30);
+    @include _desktop {
+      margin-top: toRem(31);
+    }
   }
 }
 

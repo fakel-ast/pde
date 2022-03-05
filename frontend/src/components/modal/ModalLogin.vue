@@ -11,10 +11,16 @@
     <template #modal-content>
       <form class="modal__form">
         <div class="modal__row">
-          <input class="modal__input form-input" placeholder="Имя пользователя" type="text" name="username"/>
+          <input v-model="username" class="modal__input form-input" placeholder="Имя пользователя" type="text" name="username"/>
+          <div class="modal__error" v-if="usernameError.length">
+            {{ usernameError }}
+          </div>
         </div>
         <div class="modal__row">
-          <input class="modal__input form-input" placeholder="Пароль" type="password" name="password"/>
+          <input v-model="password" class="modal__input form-input" placeholder="Пароль" type="password" name="password"/>
+          <div class="modal__error" v-if="passwordError.length">
+            {{ passwordError }}
+          </div>
         </div>
       </form>
 
@@ -25,7 +31,7 @@
     </template>
     <template #modal-confirm>
       <div class="modal__confirm">
-        <button class="modal__button button">Войти</button>
+        <button @click="confirm" class="modal__button button">Войти</button>
       </div>
       <p @click="openModalRegister" class="link modal__another-modal">
         Регистрация
@@ -61,31 +67,32 @@ export default {
     close() {
       return this.$refs.modalBase.close();
     },
-    fioValidation() {
-      if (!this.fio.length) {
-        this.fioError = "Enter fio TRANSLATE SUKA";
+    regexValidation(re, str) {
+      return re.test(str);
+    },
+    usernameValidation() {
+      console.log(this.username);
+      if (!this.regexValidation(/^[\w \-А-я _]{1,128}$/, this.username)) {
+        this.usernameError = "Некорректное имя пользователя";
         return false;
       }
-      this.fioError = "";
+      this.usernameError = "";
       return true;
     },
-    phoneValidation() {
-      if (!this.phoneObject.valid) {
-        this.phoneError = "asdsad TRANSLATE SUKA";
+    passwordValidation() {
+      if (this.password.length < 6 || this.password.length >= 20) {
+        this.passwordError = "Длина пароля 6-20 символов";
         return false;
       }
-      this.phoneError = "";
+      this.passwordError = "";
       return true;
     },
-    modalValidation() {
-      this.fioValidation();
-      this.phoneValidation();
-      if (!this.phoneError.length && !this.fioError.length) {
-        return this.$refs.modalBase.confirm({
-          fio: this.fio, phone: this.phoneObject.formatted, text: this.comment,
-          variants_execution_id: this.activeVariant,
-        });
-      }
+    confirm() {
+      if (!this.isValidForm) return;
+      return this.$refs.modalBase.confirm({
+        username: this.username,
+        password: this.password,
+      });
     },
     async showError() {
       return new Promise(resolve => {
@@ -111,49 +118,19 @@ export default {
       });
     },
   },
+  computed: {
+    isValidForm() {
+      this.usernameValidation();
+      this.passwordValidation();
+      return !(this.usernameError.length || this.passwordError.length);
+    },
+  },
 };
 </script>
 
 <style lang="scss">
 .modal {
-  text-align: center;
 
-  &__header {
-    margin-bottom: toRem(30);
-    @include _desktop {
-      margin-bottom: toRem(41);
-    }
-  }
-
-  &__form {
-    margin-bottom: toRemMob(22);
-    @include _desktop {
-      margin-bottom: toRemMob(25);
-    }
-  }
-
-  &__row {
-    &:not(:last-child) {
-      margin-bottom: toRemMob(22);
-      @include _desktop {
-        margin-bottom: toRemMob(25);
-      }
-    }
-  }
-
-  &__confirm {
-    margin-top: toRemMob(30);
-    @include _desktop {
-      margin-top: toRem(30);
-    }
-  }
-
-  &__another-modal {
-    margin-top: toRemMob(30);
-    @include _desktop {
-      margin-top: toRem(31);
-    }
-  }
 }
 
 .forgot-password {
