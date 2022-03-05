@@ -13,7 +13,9 @@
       <slot name="modal-success" v-if="isSuccess"></slot>
       <div class="modal__header">
         <slot :close="close" name="modal-close">
-          <div class="modal__close" @click="close"></div>
+          <div class="modal__close only-mobile">
+            <div class="modal__close-close" @click="close"></div>
+          </div>
         </slot>
         <h2 class="modal__title">
           <slot name="modal-title">
@@ -117,7 +119,7 @@ export default {
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 2;
+  z-index: 4;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,12 +133,16 @@ export default {
     width: 100%;
     height: 100%;
     padding: toRemMob(22) toRemMob(18) toRemMob(18) toRemMob(18);
-    overflow: scroll;
     background-color: $dark-grey-color;
 
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    @include _mobile {
+      overflow: scroll;
+    }
+
     @include _desktop {
       height: unset;
       width: unset;
@@ -147,6 +153,7 @@ export default {
   }
 
   &__header {
+    position: relative;
     text-align: center;
     font-weight: 600;
     font-size: toRemMob(25);
@@ -206,6 +213,40 @@ export default {
     margin-top: toRemMob(30);
     @include _desktop {
       margin-top: toRem(31);
+    }
+  }
+
+  &__close {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+
+    &-close {
+      position: relative;
+      width: toRemMob(17);
+      height: toRemMob(17);
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        height: 2px;
+        width: 100%;
+        background-color: $white-color;
+        transition: transform 0.3s ease 0s;
+      }
+
+      &::before {
+        transform: rotate(45deg);
+        top: 50%;
+      }
+
+      &::after {
+        transform: rotate(-45deg);
+        top: 50%;
+      }
+
     }
   }
 }
