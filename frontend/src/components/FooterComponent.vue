@@ -41,12 +41,7 @@
             </ul>
           </div>
         </div>
-
       </footer>
-      <div class="design-author">
-        <img class="design-author__img" src="../assets/images/header/logo.svg" alt="logo">
-        <p class="design-author__text">Designed by Luben</p>
-      </div>
     </div>
   </section>
 
@@ -73,9 +68,11 @@ export default {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+  padding-bottom: toRemMob(10);
 
   @include _desktop {
     flex-direction: row;
+    padding-bottom: toRem(15);
   }
 
   &__item {

@@ -47,10 +47,6 @@ export default {
     &.solved {
       color: $white-color;
 
-      .task__points {
-        color: $white-color;
-      }
-
       .task__solvings {
         color: $green-color;
       }

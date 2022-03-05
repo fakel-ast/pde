@@ -172,13 +172,14 @@ body {
   color: $white-color;
   font-size: toRem(22);
   line-height: toRem(25);
+  transition: background-color .4s ease;
 
   &:hover {
-    background: $blue-gradient;
+    background-color: $sea-color;
   }
 
   &:active {
-    background: $sea-color;
+    background-color: $sea-color;
   }
 
   &.button-red {

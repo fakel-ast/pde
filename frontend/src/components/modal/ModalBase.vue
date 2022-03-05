@@ -186,7 +186,7 @@ export default {
     position: absolute;
     bottom: toRem(-20);
     left: toRem(24);
-    font-size: toRem(14);
+    font-size: toRem(15);
     color: $red-color;
   }
 
