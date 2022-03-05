@@ -128,13 +128,18 @@ export default {
   text-align: center;
 
   &__body {
+    width: 100%;
+    height: 100%;
+    padding: toRemMob(22) toRemMob(18) toRemMob(18) toRemMob(18);
+    overflow: scroll;
     background-color: $dark-grey-color;
-    border-radius: toRemMob(19);
+
     display: flex;
     flex-direction: column;
     justify-content: center;
-
     @include _desktop {
+      height: unset;
+      width: unset;
       min-width: toRem(427);
       padding: toRem(44) toRem(36) toRem(36) toRem(36);
       border-radius: toRem(19);
@@ -158,7 +163,7 @@ export default {
   }
 
   &__header {
-    margin-bottom: toRem(30);
+    margin-bottom: toRemMob(30);
     @include _desktop {
       margin-bottom: toRem(41);
     }

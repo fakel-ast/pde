@@ -20,7 +20,7 @@
       <button @click="openModalLogin" class="header-profile__button button">Войти/Регистрация</button>
     </div>
     <div
-      @click="isOpenMenu = !isOpenMenu"
+      @click="toggleHeaderMenu"
       :class="{ active: isOpenMenu }"
       class="header__burger"
     >
@@ -46,6 +46,16 @@ export default {
     return {
       isOpenMenu: false,
     };
+  },
+  methods: {
+    toggleHeaderMenu() {
+      this.isOpenMenu = !this.isOpenMenu;
+      if (this.isOpenMenu) {
+        document.documentElement.style.overflow = "hidden";
+      } else {
+        document.documentElement.style.overflow = "";
+      }
+    },
   },
 };
 </script>
@@ -117,7 +127,7 @@ export default {
     height: toRemMob(15);
     margin-left: auto;
     cursor: pointer;
-    z-index: 2;
+    z-index: 3;
 
     @include _desktop {
       display: none;
@@ -207,6 +217,8 @@ export default {
   top: 0;
   width: 100%;
   height: 100%;
+  background-color: $body-background;
+  z-index: 2;
 
   &__list {
     padding: toRemMob(160) toRemMob(28) 0 toRemMob(28);
