@@ -45,7 +45,7 @@ export default {
     transition: background-color 0.2s ease;
 
     &.solved {
-      background-color: $sea-color;
+      background-color: $green-color-two;
       color: $white-color;
 
       .task__points {
@@ -54,7 +54,7 @@ export default {
     }
 
     &:hover {
-      background-color: $blue-color;
+      background-color: $grey-color-three;
 
       .task__points {
         color: $white-color;

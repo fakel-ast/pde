@@ -44,7 +44,7 @@ export default {
     }
 
     &:hover {
-      background-color: $blue-color;
+      background-color: $grey-color-three;
 
       .category__image {
         background-color: $white-color;
