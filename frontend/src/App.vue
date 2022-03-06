@@ -91,7 +91,7 @@ export default {
         console.error(error);
         if (error?.response?.status === 400) {
           this.$refs.modalLogin.notValidAuthData();
-          return { success: false, isReopen: true };
+          return { success: false, isReopen: true, isNotShowError: true };
         }
         return { success: false };
       }
@@ -115,7 +115,9 @@ export default {
         if (result?.success) {
           await this.$refs.modalLogin.showSuccess();
         } else {
-          await this.$refs.modalLogin.showError();
+          if (!result?.isNotShowError) {
+            await this.$refs.modalLogin.showError();
+          }
           // Тут костыль небольшой. Что бы повторить все эти действия, мы вызываем сам себя :)
           if (result?.isReopen) this.openModalLogin();
         }
