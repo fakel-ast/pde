@@ -11,6 +11,7 @@
     "codemirror": "^5.65.2",
     "core-js": "^3.6.5",
     "filesize": "^8.0.7",
+    "moment": "^2.29.1",
     "reset-css": "^5.0.1",
     "vue": "^3.0.0",
     "vue-next-select": "^2.10.2",

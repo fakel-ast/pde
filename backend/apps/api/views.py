@@ -111,7 +111,7 @@ class TaskViews(MyMethodView):
                 fn.JSON_CONTAINS(fn.JSON_ARRAYAGG(UserSolvedTask.user_id), str(current_user.id)).alias('is_solved'),
 
                 fn.IF(
-                    SQL('task_file_join.id IS NOT NULL'),
+                    SQL('COUNT(task_file_join.id) != 0'),
                     fn.CONCAT(
                         '[',
                         fn.GROUP_CONCAT(
@@ -119,6 +119,7 @@ class TaskViews(MyMethodView):
                                 'file_link', SQL('task_file_join.file_link'),
                                 'file', SQL('task_file_join.file'),
                                 'size', SQL('task_file_join.size'),
+                                'id', SQL('task_file_join.id')
                             ).distinct()
                         ).order_by(
                             SQL('task_file_join.order')
@@ -129,7 +130,7 @@ class TaskViews(MyMethodView):
                 ).alias('files'),
 
                 fn.IF(
-                    TaskHint.id.is_null(False),
+                    fn.COUNT(TaskHint.id) != 0,
                     fn.CONCAT(
                         '[',
                         fn.GROUP_CONCAT(
@@ -145,14 +146,15 @@ class TaskViews(MyMethodView):
                 ).alias('hints'),
 
                 fn.IF(
-                    TaskAnswer.id.is_null(False),
+                    fn.COUNT(TaskAnswer.id) != 0,
                     fn.CONCAT(
                         '[',
                         fn.GROUP_CONCAT(
                             fn.JSON_OBJECT(
                                 'answer', TaskAnswer.answer,
                                 'created', TaskAnswer.created,
-                                'is_success', TaskAnswer.is_success
+                                'is_success', TaskAnswer.is_success,
+                                'id', TaskAnswer.id
                             ).distinct()
                         ).order_by(
                             TaskAnswer.created.desc()
@@ -160,7 +162,11 @@ class TaskViews(MyMethodView):
                         ']'
                     ),
                     None
-                ).alias('answers')
+                ).alias('answers'),
+
+                SQL('IFNULL(success_answers.count, 0)').alias('success_answers_count'),
+                SQL('IFNULL(wrong_answers.count, 0)').alias('wrong_answers_count'),
+                SQL('IFNULL(wrong_answers.count, 0) + IFNULL(success_answers.count, 0)').alias('all_answers'),
 
             ).join_from(
                 Task,
@@ -197,6 +203,28 @@ class TaskViews(MyMethodView):
             ).join_from(
                 Task,
                 TaskCategory
+            ).join(
+                TaskAnswer.select(
+                    TaskAnswer.task_id,
+                    fn.COUNT(TaskAnswer.id).alias('count')
+                ).where(
+                    TaskAnswer.is_success
+                ).group_by(
+                    TaskAnswer.task_id
+                ).alias('success_answers'),
+                JOIN.LEFT_OUTER,
+                on=(SQL('success_answers.task_id') == Task.id)
+            ).join(
+                TaskAnswer.select(
+                    TaskAnswer.task_id,
+                    fn.COUNT(TaskAnswer.id).alias('count')
+                ).where(
+                    TaskAnswer.is_success == 0
+                ).group_by(
+                    TaskAnswer.task_id
+                ).alias('wrong_answers'),
+                JOIN.LEFT_OUTER,
+                on=(SQL('wrong_answers.task_id') == Task.id)
             ).where(
                 Task.id == task_id, TaskCategory.slug == category_slug
             ).group_by(

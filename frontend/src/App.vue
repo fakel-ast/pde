@@ -14,8 +14,9 @@
     :categories="categories"
     :get-solved-suffix="getSolvedSuffix"
     :get-users-suffix="getUsersSuffix"
+    :open-modal-login="openModalLogin"
   />
-  <footer-component :categories="categories"/>
+  <footer-component :categories="categories" />
 </template>
 
 <script>

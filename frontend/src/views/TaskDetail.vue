@@ -63,22 +63,28 @@
             </ul>
           </slide-up-down>
         </div>
-        <div class="task-content__answers task-answers task-content-block">
+        <div v-if="task.type === 'text_answer'" class="task-content__answers task-answers task-content-block">
           <div class="task-answers__header">
             <p class="task-answers__title task-content__title">
               Ответ
             </p>
           </div>
-          <div class="task-answers__not-auth not-auth">
+          <div v-if="!Object.entries($store.getters.currentUser).length" class="task-answers__not-auth not-auth">
             <span class="not-auth__text">Для этого&nbsp;</span>
-            <a class="not-auth__link link" href="#">войдите или зарегистрируйтесь!</a>
+            <span class="not-auth__link link" @click="openModalLogin">войдите или зарегистрируйтесь!</span>
           </div>
-          <div class="task-answers__answer answer-form">
+          <div v-else class="task-answers__answer answer-form">
             <label for="answer" class="answer-form__title">
               Вставьте ответ в поле:
             </label>
             <form class="answer-form__form">
-              <input id="answer" type="text" class="answer-form__input form-input" name="answer" placeholder="Ваш ответ"/>
+              <input
+                id="answer"
+                type="text"
+                class="answer-form__input form-input"
+                name="answer"
+                placeholder="Ваш ответ"
+              />
               <button class="button answer-form__button">Проверить</button>
             </form>
           </div>
@@ -86,29 +92,32 @@
             <p class="old-answers__title task-content__title">
               Мои ответы
             </p>
-            <p class="old-answers__empty">
+            <p v-if="!task.answers" class="old-answers__empty">
               Ваших ответов не найдено.
             </p>
-            <ul class="old-answers__list">
-              <li class="old-answers__item">
-                <p class="old-answers__answer">Какой-то ответ</p>
-                <p class="old-answers__date">29.12.2021 20:25 GMT</p>
-                <p class="old-answers__status success-text">Верно</p>
-              </li>
-              <li class="old-answers__item">
-                <p class="old-answers__answer">Какой-то ответ</p>
-                <p class="old-answers__date">29.12.2021 20:25 GMT</p>
-                <p class="old-answers__status error-text">Верно</p>
-              </li>
-              <li class="old-answers__item">
-                <p class="old-answers__answer">Какой-то очень-очень длиннasdasdasdasdasdas</p>
-                <p class="old-answers__date">29.12.2021 20:25 GMT</p>
-                <p class="old-answers__status error-text">Верно</p>
+            <ul v-else class="old-answers__list">
+              <li
+                v-for="answer in task.answers"
+                :key="answer.id"
+                class="old-answers__item"
+              >
+                <p class="old-answers__answer">
+                  {{ answer.answer }}
+                </p>
+                <p class="old-answers__date">
+                  {{ getAnswerDate(answer.created) }}
+                </p>
+                <p
+                  :class="{ 'success-text': answer.is_success, 'error-text': !answer.is_success }"
+                  class="old-answers__status"
+                >
+                  {{ answer.is_success ? "Верно" : "Неверно" }}
+                </p>
               </li>
             </ul>
           </div>
         </div>
-        <div class="task-content__answers task-answers task-content-block">
+        <div v-else-if="task.type === 'code_answer'" class="task-content__answers task-answers task-content-block">
           <div class="task-answers__header">
             <p class="task-answers__title task-content__title">
               Ответ
@@ -167,15 +176,21 @@
             <div class="task-statistics__static">
               <div class="task-statistics__success">
                 <p class="task-statistics__title">
-                  Правильные ответы - 541
+                  Правильные ответы - {{ task.success_answers_count || 0 }}
                 </p>
-                <div class="task-statistics__progress task-statistics__progress-success"></div>
+                <div
+                  :style="`--success-percent: ${getStatistics().successPercent}%`"
+                  class="task-statistics__progress task-statistics__progress-success"
+                ></div>
               </div>
               <div class="task-statistics__error">
                 <p class="task-statistics__title">
-                  Неправильные ответы - 3151
+                  Неправильные ответы - {{ task.wrong_answers_count || 0 }}
                 </p>
-                <div class="task-statistics__progress task-statistics__progress-error"></div>
+                <div
+                  :style="`--wrong-percent: ${getStatistics().wrongPercent}%`"
+                  class="task-statistics__progress task-statistics__progress-wrong"
+                ></div>
               </div>
             </div>
           </slide-up-down>
@@ -184,7 +199,7 @@
       <h1 class="page-title only-mobile">{{ task.title }}</h1>
       <div class="task-detail__additional">
         <div class="task-detail__info">
-          <p class="task-detail__status">
+          <p class="task-detail__status" :class="{resolved: task.is_solved}">
             Статус: {{ task.is_solved ? "решена" : "не решена" }}
           </p>
           <p class="task-detail__resolve-count">
@@ -203,7 +218,10 @@
 </template>
 
 <script>
+import {nextTick} from "vue";
+
 const filesize = require("filesize");
+const moment = require("moment");
 
 import SlideUpDown from "vue3-slide-up-down";
 
@@ -225,6 +243,7 @@ export default {
   props: {
     getSolvedSuffix: Function,
     getUsersSuffix: Function,
+    openModalLogin: Function,
   },
   components: {
     SlideUpDown,
@@ -242,30 +261,44 @@ export default {
   created() {
     this.getTaskDetail();
   },
-  mounted() {
-    if (this.$refs.codeTextArea) {
-      this.codeMirror = CodeMirror.fromTextArea(this.$refs.codeTextArea, {
-        mode: "python",
-        lineNumbers: true,
-        theme: "code-skill",
-        indentUnit: 4,
-        scrollbarStyle: "overlay",
-      });
-    }
-  },
   methods: {
+    initCodeMirror() {
+      if (this.$refs.codeTextArea) {
+        this.codeMirror = CodeMirror.fromTextArea(this.$refs.codeTextArea, {
+          mode: "python",
+          lineNumbers: true,
+          theme: "code-skill",
+          indentUnit: 4,
+          scrollbarStyle: "overlay",
+        });
+      }
+    },
     async getTaskDetail() {
       try {
         const { data } = await Axios.get(
           `/categories/${this.$route.params.categorySlug}/tasks/${this.$route.params.taskId}/`,
         );
         this.task = data?.task || {};
+        nextTick(() => {
+          this.initCodeMirror();
+        });
       } catch (error) {
         console.error(error);
       }
     },
     getFileSize(size) {
       return filesize(size);
+    },
+    getAnswerDate(date) {
+      return moment(date).locale("ru").format("MM:MM:YYYY в H:mm");
+    },
+    getStatistics() {
+      if (!this.task) return {};
+      const successPercent = (100 * (this.task.success_answers_count || 0)) / this.task.all_answers;
+      const wrongPercent = (100 * (this.task.wrong_answers_count || 0)) / this.task.all_answers;
+      console.log(wrongPercent);
+      console.log(this.task.wrong_answers_count || 0);
+      return { successPercent, wrongPercent };
     },
   },
 };
@@ -341,7 +374,7 @@ export default {
 
   &__status {
     &.resolved {
-      color: $sea-color;
+      color: $green-color;
     }
   }
 
@@ -650,14 +683,14 @@ export default {
 
     &-success {
       &::before {
-        width: 30%;
+        width: var(--success-percent);
         background-color: $green-color;
       }
     }
 
-    &-error {
+    &-wrong {
       &::before {
-        width: 70%;
+        width: var(--wrong-percent);
         background-color: $red-color;
       }
     }
