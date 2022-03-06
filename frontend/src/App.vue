@@ -68,6 +68,9 @@ export default {
         return !data?.errors;
       } catch (error) {
         console.error(error);
+        if (error?.response?.status === 400) {
+          this.$refs.modalLogin.notValidAuthData();
+        }
       }
     },
     async sendModalRegister(dataToRequest) {
@@ -88,7 +91,7 @@ export default {
         if (result) {
           await this.$refs.modalLogin.showSuccess();
         } else {
-          await this.$refs.modalLogin.showError();
+          // await this.$refs.modalLogin.showError();
           // Тут костыль небольшой. Что бы повторить все эти действия, мы вызываем сам себя :)
           this.openModalLogin();
         }

@@ -12,6 +12,7 @@
       <form class="modal__form">
         <div class="modal__row">
           <input
+            @input="authError = ''"
             v-model="username"
             class="modal__input form-input"
             placeholder="Имя пользователя"
@@ -24,6 +25,7 @@
         </div>
         <div class="modal__row">
           <input
+            @input="authError = ''"
             v-model="password"
             class="modal__input form-input"
             placeholder="Пароль"
@@ -36,9 +38,13 @@
         </div>
       </form>
 
-      <p class="modal__text forgot-password">
-        Забыли пароль?
-      </p>
+      <div class="forgot-password">
+        <p class="modal__text">Забыли пароль?</p>
+        <div class="modal__error modal__auth-error" v-if="authError.length">
+          {{ authError }}
+        </div>
+      </div>
+
 
     </template>
     <template #modal-confirm>
@@ -70,6 +76,7 @@ export default {
       usernameError: "",
       password: "",
       passwordError: "",
+      authError: "",
     };
   },
   methods: {
@@ -83,7 +90,6 @@ export default {
       return re.test(str);
     },
     usernameValidation() {
-      console.log(this.username);
       if (!this.regexValidation(/^[\w \-А-я _]{1,128}$/, this.username)) {
         this.usernameError = "Некорректное имя пользователя";
         return false;
@@ -123,6 +129,10 @@ export default {
         }, 1000);
       });
     },
+    notValidAuthData() {
+      this.authError = "Неверные логи или пароль";
+
+    },
   },
   computed: {
     isValidForm() {
@@ -137,9 +147,17 @@ export default {
 <style lang="scss">
 .modal {
 
+  &__auth-error {
+    left: 0;
+    right: 0;
+
+  }
+
 }
 
 .forgot-password {
+  position: relative;
   cursor: pointer;
 }
+
 </style>
