@@ -81,6 +81,7 @@ export default {
   },
   props: {
     openModalLogin: Function,
+    groups: Array,
   },
   data() {
     return {
@@ -92,22 +93,6 @@ export default {
       passwordError: "",
       group: null,
       groupError: "",
-      groups: [
-        { title: "ОИБ-418", id: 1 },
-        { title: "ОИБ-318", id: 2 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-        { title: "ОИБ-218", id: 3 },
-      ],
     };
   },
   methods: {

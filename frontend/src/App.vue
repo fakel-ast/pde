@@ -7,6 +7,7 @@
   />
   <modal-register
     ref="modalRegister"
+    :groups="groups"
     :open-modal-login="openModalLogin"
   />
   <router-view
@@ -34,10 +35,12 @@ export default {
   },
   created() {
     this.getCategories();
+    this.getGroups();
   },
   data() {
     return {
       categories: [],
+      groups: [],
     };
   },
   methods: {
@@ -45,6 +48,14 @@ export default {
       try {
         const { data } = await Axios.get("categories/");
         this.categories = data?.categories || [];
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getGroups() {
+      try {
+        const { data } = await Axios.get("groups/");
+        this.groups = data?.groups || [];
       } catch (error) {
         console.error(error);
       }

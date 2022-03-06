@@ -84,6 +84,8 @@ class TaskHint(BaseModel):
 class Group(BaseModel):
     short_title = CharField(max_length=20, verbose_name='Короткое название группы', help_text='Например "ОИБ-418"')
     full_title = CharField(max_length=128, verbose_name='Полное название группы', null=True)
+    order = IntegerField(default=999, verbose_name='Сортировка')
+    active = BooleanField(default=True, verbose_name='Флаг активности')
 
     class Meta:
         table_name = TABLE_PREFIX + 'group'

@@ -282,7 +282,8 @@ class LoginView(MyMethodView):
 
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
-            return {'errors': True, 'message': f'{e} in {format(exc_tb.tb_lineno)}'}
+            current_app.logger.error('Login: ' + format(e) + ' in ' + format(exc_tb.tb_lineno))
+            return {'errors': True, 'message': 'Code error'}, 500
 
 
 class GetCurrentUserView(MyMethodView):
@@ -305,11 +306,12 @@ class GetCurrentUserView(MyMethodView):
             ).where(
                 User.id == current_user.id
             ).dicts().first()
-            return {'user': user}
+            return {'errors': False, 'user': user}
 
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
-            return {'errors': True, 'message': f'{e} in {format(exc_tb.tb_lineno)}'}
+            current_app.logger.error('Get current user: ' + format(e) + ' in ' + format(exc_tb.tb_lineno))
+            return {'errors': True, 'message': 'Code error'}, 500
 
 
 class LogoutView(MyMethodView):
@@ -321,3 +323,25 @@ class LogoutView(MyMethodView):
     def get(self, *args, **kwargs):
         session.pop('session_token')
         return {'errors': True}
+
+
+class GroupsVies(MyMethodView):
+
+    def get(self, *args, **kwargs):
+        try:
+            groups = Group.select(
+                Group.id,
+                Group.short_title.alias('title'),
+                Group.full_title.alias('full_title'),
+            ).where(
+                Group.id
+            ).order_by(
+                Group.order
+            ).dicts()
+
+            return {'errors': False, 'groups': list(groups)}
+
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            current_app.logger.error('Get groups: ' + format(e) + ' in ' + format(exc_tb.tb_lineno))
+            return {'errors': True, 'message': 'Code error'}, 500
