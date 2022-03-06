@@ -16,8 +16,25 @@
         </li>
       </ul>
     </nav>
-    <div class="header__profile header-profile">
-      <button @click="openModalLogin" class="header-profile__button button">Войти/Регистрация</button>
+    <div class="header__profile">
+      <button
+        v-if="!Object.entries($store.getters.currentUser).length"
+        @click="openModalLogin"
+        class="header-profile__button button"
+      >
+        Войти/Регистрация
+      </button>
+      <div v-else class="menu__profile header-profile">
+        <img
+          class="header-profile__avatar"
+          :src="$store.getters.currentUser.avatar ? $host + $store.getters.currentUser.avatar : require('@/assets/images/header/kaonasi.jpg')"
+          alt="avatar"
+        >
+        <router-link :to="'asdas'" class="button header-profile__button">Профиль</router-link>
+        <div class="header-profile__logout">
+          <div class="header-profile__logout-image"></div>
+        </div>
+      </div>
     </div>
     <div
       @click="toggleHeaderMenu"
@@ -30,7 +47,9 @@
       <ul class="menu__list">
         <li class="menu__item">Профиль</li>
         <li class="menu__item">Задачи</li>
-        <li class="menu__item">Выйти из аккаунта</li>
+        <li class="menu__item">
+          Выйти из аккаунта
+        </li>
       </ul>
     </nav>
   </header>
@@ -228,5 +247,42 @@ export default {
     margin-bottom: 49px;
     font-weight: 400;
   }
+}
+
+.header-profile {
+  display: flex;
+  align-items: center;
+
+  &__avatar {
+    width: toRem(56);
+    height: toRem(56);
+    margin-right: toRem(16);
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &__button {
+    margin-right: toRem(20);
+  }
+
+  &__logout {
+    height: toRem(43);
+    width: toRem(43);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $red-color;
+    border-radius: 50%;
+    cursor: pointer;
+
+    &-image {
+      width: toRem(22);
+      height: toRem(20);
+      background: url("../assets/images/header/logout.svg") no-repeat center center;
+      transform: translateX(7%);
+    }
+  }
+
+
 }
 </style>
