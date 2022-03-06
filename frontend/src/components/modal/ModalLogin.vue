@@ -111,13 +111,11 @@ export default {
     async showSuccess() {
       return new Promise((resolve) => {
         this.$refs.modalBase.showSuccess();
-        setTimeout(() => {
-          this.username = "";
-          this.password = "";
-          this.$refs.modalBase.hideSuccess();
-          this.$refs.modalBase.close();
-          resolve();
-        }, 1000);
+        this.username = "";
+        this.password = "";
+        this.$refs.modalBase.hideSuccess();
+        this.$refs.modalBase.close();
+        resolve();
       });
     },
     notValidAuthData() {

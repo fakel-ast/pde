@@ -156,16 +156,13 @@ export default {
     },
     async showSuccess() {
       return new Promise((resolve) => {
-        this.$refs.modalBase.showSuccess();
-        setTimeout(() => {
-          this.username = "";
-          this.email = "";
-          this.password = "";
-          this.group = {};
-          this.$refs.modalBase.hideSuccess();
-          this.$refs.modalBase.close();
-          resolve();
-        }, 1000);
+        this.username = "";
+        this.email = "";
+        this.password = "";
+        this.group = {};
+        this.$refs.modalBase.hideSuccess();
+        this.$refs.modalBase.close();
+        resolve();
       });
     },
     checkExistsUsername() {
