@@ -60,9 +60,6 @@ class TasksViews(MyMethodView):
         """
 
         try:
-            class current_user:
-                id = 1
-
             tasks = Task.select(
                 Task.id,
                 Task.created,
@@ -103,9 +100,6 @@ class TaskViews(MyMethodView):
         """
 
         try:
-            class current_user:
-                id = 1
-
             task = Task.select(
                 Task.id,
                 Task.created,
