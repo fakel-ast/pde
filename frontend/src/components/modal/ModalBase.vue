@@ -135,10 +135,6 @@ export default {
     padding: toRemMob(22) toRemMob(18) toRemMob(18) toRemMob(18);
     background-color: $dark-grey-color;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
     @include _mobile {
       overflow: scroll;
     }
