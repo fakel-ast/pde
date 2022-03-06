@@ -31,7 +31,7 @@
           alt="avatar"
         >
         <router-link :to="'asdas'" class="button header-profile__button">Профиль</router-link>
-        <div class="header-profile__logout">
+        <div @click="logout" class="header-profile__logout">
           <div class="header-profile__logout-image"></div>
         </div>
       </div>
@@ -56,6 +56,8 @@
 </template>
 
 <script>
+import {Axios} from "@/assets/js/http-common";
+
 export default {
   name: "HeaderComponent",
   props: {
@@ -73,6 +75,15 @@ export default {
         document.documentElement.style.overflow = "hidden";
       } else {
         document.documentElement.style.overflow = "";
+      }
+    },
+    logout() {
+
+      this.$store.commit("updateCurrentUser", {});
+      try {
+        Axios.get("users/logout/");
+      } catch (error) {
+        console.log(error);
       }
     },
   },

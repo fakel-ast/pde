@@ -302,11 +302,13 @@ class GetCurrentUserView(MyMethodView):
 class LogoutView(MyMethodView):
 
     def post(self, *args, **kwargs):
-        session.pop('session_token')
+        if 'session_token' in session:
+            session.pop('session_token')
         return {'errors': True}
 
     def get(self, *args, **kwargs):
-        session.pop('session_token')
+        if 'session_token' in session:
+            session.pop('session_token')
         return {'errors': True}
 
 
