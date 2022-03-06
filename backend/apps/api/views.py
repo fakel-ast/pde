@@ -14,7 +14,7 @@ from backend.database.models import (Group, Task, TaskAnswer, TaskCategory,
                                      TaskFile, TaskHint, TaskType,
                                      UserSolvedTask, User, Session)
 from backend.base import CONFIG, MyMethodView, user_required, auth_user
-from backend.functions import recursive_parse
+from backend.functions import recursive_parse, get_current_user
 
 
 class CategoriesViews(MyMethodView):
@@ -251,7 +251,7 @@ class UserView(MyMethodView):
                 user.save()
                 if user:
                     auth_user(user=user)
-                    return {'errors': False}, 201
+                    return {'errors': False, 'user': model_to_dict(user)}, 201
             return {'errors': True, 'message': 'Not valid data'}, 400
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -291,22 +291,7 @@ class GetCurrentUserView(MyMethodView):
 
     def get(self, *args, **kwargs):
         try:
-            user = User.select(
-                User.id,
-                User.username,
-                fn.CONCAT(
-                    CONFIG.PATH_TO_USER_AVATAR, '/',
-                    User.id, '/', User.avatar
-                ).alias('avatar'),
-                User.fio,
-                User.is_blocked,
-                User.is_teacher,
-                User.last,
-                User.online,
-            ).where(
-                User.id == current_user.id
-            ).dicts().first()
-            return {'errors': False, 'user': user}
+            return {'errors': False, 'user': get_current_user()}
 
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()

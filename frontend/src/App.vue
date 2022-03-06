@@ -34,6 +34,7 @@ export default {
     ModalRegister,
   },
   created() {
+    this.getCurrentUser();
     this.getCategories();
     this.getGroups();
   },
@@ -60,6 +61,14 @@ export default {
         console.error(error);
       }
     },
+    async getCurrentUser() {
+      try {
+        const { data } = await Axios.get("users/current/");
+        this.$store.commit("updateCurrentUser", data?.user || {});
+      } catch (error) {
+        console.error(error);
+      }
+    },
     getSolvedSuffix(count) {
       count = (count || 0).toString();
       if (count[count.length - 1] === "1" && count.slice(count.length - 2) !== "11") return "Решил";
@@ -76,6 +85,7 @@ export default {
     async sendModalLogin(dataToRequest) {
       try {
         const { data } = await Axios.post("users/login/", dataToRequest);
+        this.$store.commit("updateCurrentUser", data?.user || {});
         return !data?.errors;
       } catch (error) {
         console.error(error);
@@ -87,6 +97,7 @@ export default {
     async sendModalRegister(dataToRequest) {
       try {
         const { data } = await Axios.post("users/", dataToRequest);
+        this.$store.commit("updateCurrentUser", data?.user || {});
         return !data?.errors;
       } catch (error) {
         console.error(error);

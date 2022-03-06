@@ -16,7 +16,7 @@ from playhouse.shortcuts import model_to_dict
 
 from backend import mail
 from backend.database.models import User, Session
-from backend.functions import csrf_protect, validate_json, get_ip
+from backend.functions import csrf_protect, validate_json, get_ip, get_current_user
 from backend.cfg import DefaultConfig
 
 CONFIG = DefaultConfig
@@ -123,7 +123,7 @@ def user_required(func):
         from backend.database.models import User
         from code_skill import app
 
-        if app.debug:
+        if not app.debug:
             session_token = session.get('session_token') or ''
             if session_token:
                 try:
@@ -141,6 +141,16 @@ def user_required(func):
                     current_app.logger.error(f'Ошибка session token: {e} in {format(exc_tb.tb_lineno)}')
             return {'errors': True, 'message': 'Not valid session token'}, 403
         else:
+            user = User.select(
+                User
+            ).where(
+                User.username == 'fakel_ast'
+            ).first()
+
+            login_user(user)
+
+            if user:
+                login_user(user)
             return func(*args, **kwargs)
 
     return decorator
@@ -158,7 +168,7 @@ def auth_user(user: User, *args, **kwargs):
             .insert(session=session_token, user_id=user.id) \
             .on_conflict('replace') \
             .execute()
-        return {'errors': False}
+        return {'errors': False, 'user': get_current_user()}
 
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()

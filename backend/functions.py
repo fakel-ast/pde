@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 
 import jsonschema
 from flask import request, abort, current_app, session, json
+from flask_login import current_user
+from peewee import fn
 
 
 def csrf_protect(val):
@@ -73,3 +75,26 @@ def recursive_parse(dict_for_parse):
         for value in dict_for_parse:
             value = recursive_parse(value)
     return dict_for_parse
+
+
+def get_current_user(*args, **kwargs):
+    """Model select for get current user"""
+    from base import CONFIG
+    from database.models import User
+    user = User.select(
+        User.id,
+        User.username,
+        fn.CONCAT(
+            CONFIG.PATH_TO_USER_AVATAR, '/',
+            User.id, '/', User.avatar
+        ).alias('avatar'),
+        User.fio,
+        User.is_blocked,
+        User.is_teacher,
+        User.last,
+        User.online,
+        User.email,
+    ).where(
+        User.id == current_user.id
+    ).dicts().first()
+    return user
