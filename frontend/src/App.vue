@@ -129,7 +129,7 @@ export default {
         if (result) {
           await this.$refs.modalRegister.showSuccess();
         } else {
-          // await this.$refs.modalRegister.showError();
+          await this.$refs.modalRegister.showError();
           // Тут костыль небольшой. Что бы повторить все эти действия, мы вызываем сам себя :)
           this.openModalRegister();
         }
