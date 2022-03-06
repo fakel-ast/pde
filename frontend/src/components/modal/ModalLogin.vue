@@ -1,12 +1,8 @@
 <template>
   <modal-base ref="modalBase">
     <template #modal-error></template>
-    <template #modal-success>
-
-    </template>
-    <template #modal-title>
-      <span class="modal__header-active">Войти /</span> <span>Регистрация</span>
-    </template>
+    <template #modal-success></template>
+    <template #modal-title><span class="modal__header-active">Войти /</span> <span>Регистрация</span></template>
 
     <template #modal-content>
       <form class="modal__form">
@@ -44,22 +40,17 @@
           {{ authError }}
         </div>
       </div>
-
-
     </template>
     <template #modal-confirm>
       <div class="modal__confirm">
         <button @click="confirm" class="modal__button button">Войти</button>
       </div>
-      <p @click="openModalRegister" class="link modal__another-modal">
-        Регистрация
-      </p>
+      <p @click="openModalRegister" class="link modal__another-modal">Регистрация</p>
     </template>
   </modal-base>
 </template>
 
 <script>
-
 import ModalBase from "@/components/modal/ModalBase";
 
 export default {
@@ -109,7 +100,7 @@ export default {
       });
     },
     async showError() {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         this.$refs.modalBase.showError();
         setTimeout(() => {
           this.$refs.modalBase.hideError();
@@ -118,7 +109,7 @@ export default {
       });
     },
     async showSuccess() {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         this.$refs.modalBase.showSuccess();
         setTimeout(() => {
           this.username = "";
@@ -131,7 +122,6 @@ export default {
     },
     notValidAuthData() {
       this.authError = "Неверные логи или пароль";
-
     },
   },
   computed: {
@@ -146,18 +136,14 @@ export default {
 
 <style lang="scss">
 .modal {
-
   &__auth-error {
     left: 0;
     right: 0;
-
   }
-
 }
 
 .forgot-password {
   position: relative;
   cursor: pointer;
 }
-
 </style>

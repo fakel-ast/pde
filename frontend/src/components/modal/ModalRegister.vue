@@ -1,24 +1,27 @@
 <template>
   <modal-base ref="modalBase">
     <template #modal-error></template>
-    <template #modal-success>
-
-    </template>
-    <template #modal-title>
-      <span>Войти</span> <span class="modal__header-active">/ Регистрация</span>
-    </template>
+    <template #modal-success></template>
+    <template #modal-title><span>Войти</span> <span class="modal__header-active">/ Регистрация</span></template>
 
     <template #modal-content>
       <form class="modal__form">
         <div class="modal__row">
-          <input class="modal__input form-input" v-model="username" placeholder="Имя пользователя" type="text"
-                 name="username"/>
+          <input
+            @input="(checkExistsUsername()), usernameError = ''"
+            v-model="username"
+            class="modal__input form-input"
+            placeholder="Имя пользователя"
+            type="text"
+            name="username"
+          />
           <div class="modal__error" v-if="usernameError.length">
             {{ usernameError }}
           </div>
         </div>
         <div class="modal__row">
-          <input class="modal__input form-input" v-model="email" placeholder="E-mail" type="email" name="email"/>
+          <input @input="emailError = ''" class="modal__input form-input" v-model="email" placeholder="E-mail"
+                 type="email" name="email"/>
           <div class="modal__error" v-if="emailError.length">
             {{ emailError }}
           </div>
@@ -52,26 +55,21 @@
           </div>
         </div>
       </form>
-
     </template>
     <template #modal-confirm>
       <div class="modal__confirm">
-        <button @click="confirm" class="modal__button button">
-          Зарегистрироваться
-        </button>
+        <button @click="confirm" class="modal__button button">Зарегистрироваться</button>
       </div>
-      <p @click="openModalLogin" class="link modal__another-modal">
-        Уже есть аккаунт?
-      </p>
+      <p @click="openModalLogin" class="link modal__another-modal">Уже есть аккаунт?</p>
     </template>
   </modal-base>
 </template>
 
 <script>
-
 import ModalBase from "@/components/modal/ModalBase";
 import VueNextSelect from "vue-next-select";
 import "vue-next-select/dist/index.min.css";
+import {Axios} from "@/assets/js/http-common";
 
 export default {
   name: "ModalRegister",
@@ -93,6 +91,7 @@ export default {
       passwordError: "",
       group: null,
       groupError: "",
+      touchTime: 0,
     };
   },
   methods: {
@@ -147,7 +146,7 @@ export default {
       });
     },
     async showError() {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         this.$refs.modalBase.showError();
         setTimeout(() => {
           this.$refs.modalBase.hideError();
@@ -156,7 +155,7 @@ export default {
       });
     },
     async showSuccess() {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         this.$refs.modalBase.showSuccess();
         setTimeout(() => {
           this.fio = "";
@@ -169,6 +168,21 @@ export default {
         }, 1000);
       });
     },
+    checkExistsUsername() {
+      this.touchTime = new Date().getTime();
+      setTimeout(async () => {
+        if (this.touchTime <= new Date().getTime() - 600 && this.touchTime > 0) {
+          try {
+            const { data } = await Axios.get(`users/?username=${this.username}`);
+            if (data?.is_exists) {
+              this.usernameError = "Это имя уже занято";
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      }, 600);
+    },
   },
   computed: {
     isValidForm() {
@@ -176,10 +190,14 @@ export default {
       this.passwordValidation();
       this.emailValidation();
       this.groupValidation();
-      return !(this.usernameError.length || this.passwordError.length || this.emailError.length || this.groupError.length);
+      return !(
+        this.usernameError.length ||
+        this.passwordError.length ||
+        this.emailError.length ||
+        this.groupError.length
+      );
     },
   },
-
 };
 </script>
 
@@ -228,7 +246,6 @@ export default {
       top: toRem(54);
     }
   }
-
 }
 
 .vue-input {
@@ -239,7 +256,6 @@ export default {
   input[placeholder="Группа"]::placeholder {
     color: $grey-color;
   }
-
 }
 
 .vue-dropdown {
@@ -268,7 +284,6 @@ export default {
     border-radius: toRem(5);
     padding-top: 100px;
   }
-
 
   &-item {
     font-size: toRem(22);

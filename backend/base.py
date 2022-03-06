@@ -141,16 +141,14 @@ def user_required(func):
                     current_app.logger.error(f'Ошибка session token: {e} in {format(exc_tb.tb_lineno)}')
             return {'errors': True, 'message': 'Not valid session token'}, 403
         else:
-            user = User.select(
-                User
-            ).where(
-                User.username == 'fakel_ast'
-            ).first()
-
-            login_user(user)
-
-            if user:
-                login_user(user)
+            # user = User.select(
+            #     User
+            # ).where(
+            #     User.username == 'fakel_ast'
+            # ).first()
+            #
+            # if user:
+            #     login_user(user)
             return func(*args, **kwargs)
 
     return decorator
