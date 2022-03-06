@@ -86,12 +86,14 @@ export default {
       try {
         const { data } = await Axios.post("users/login/", dataToRequest);
         this.$store.commit("updateCurrentUser", data?.user || {});
-        return !data?.errors;
+        return { success: !data?.errors };
       } catch (error) {
         console.error(error);
         if (error?.response?.status === 400) {
           this.$refs.modalLogin.notValidAuthData();
+          return { success: false, isReopen: true };
         }
+        return { success: false };
       }
     },
     async sendModalRegister(dataToRequest) {
@@ -110,12 +112,12 @@ export default {
         // Fake send form to backend
         const result = await this.sendModalLogin(modalResult);
         // if success back response show success and close modal, else show error
-        if (result) {
+        if (result?.success) {
           await this.$refs.modalLogin.showSuccess();
         } else {
-          // await this.$refs.modalLogin.showError();
+          await this.$refs.modalLogin.showError();
           // Тут костыль небольшой. Что бы повторить все эти действия, мы вызываем сам себя :)
-          this.openModalLogin();
+          if (result?.isReopen) this.openModalLogin();
         }
       }
     },
