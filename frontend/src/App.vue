@@ -62,11 +62,21 @@ export default {
       }
       return "пользователей";
     },
-    async sendModalLogin(data) {
-      console.log(data);
+    async sendModalLogin(dataToRequest) {
+      try {
+        const { data } = await Axios.post("users/login/", dataToRequest);
+        return !data?.errors;
+      } catch (error) {
+        console.error(error);
+      }
     },
-    async sendModalRegister(data) {
-      console.log(data);
+    async sendModalRegister(dataToRequest) {
+      try {
+        const { data } = await Axios.post("users/", dataToRequest);
+        return !data?.errors;
+      } catch (error) {
+        console.error(error);
+      }
     },
     async openModalLogin() {
       this.$refs.modalRegister.close();

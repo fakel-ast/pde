@@ -39,8 +39,14 @@
           </div>
         </div>
         <div class="modal__row">
-          <input v-model="password" class="modal__input form-input" placeholder="Пароль" type="password"
-                 name="password"/>
+          <input
+            @input="passwordValidation"
+            v-model="password"
+            class="modal__input form-input"
+            placeholder="Пароль"
+            type="password"
+            name="password"
+          />
           <div class="modal__error" v-if="passwordError.length">
             {{ passwordError }}
           </div>
@@ -123,8 +129,8 @@ export default {
       return true;
     },
     passwordValidation() {
-      if (this.password.length < 6 || this.password.length >= 20) {
-        this.passwordError = "Длина пароля 6-20 символов";
+      if (!this.regexValidation(/(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/, this.password)) {
+        this.passwordError = "Слабый пароль";
         return false;
       }
       this.passwordError = "";

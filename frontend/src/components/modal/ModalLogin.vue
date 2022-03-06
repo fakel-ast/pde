@@ -11,13 +11,25 @@
     <template #modal-content>
       <form class="modal__form">
         <div class="modal__row">
-          <input v-model="username" class="modal__input form-input" placeholder="Имя пользователя" type="text" name="username"/>
+          <input
+            v-model="username"
+            class="modal__input form-input"
+            placeholder="Имя пользователя"
+            type="text"
+            name="username"
+          />
           <div class="modal__error" v-if="usernameError.length">
             {{ usernameError }}
           </div>
         </div>
         <div class="modal__row">
-          <input v-model="password" class="modal__input form-input" placeholder="Пароль" type="password" name="password"/>
+          <input
+            v-model="password"
+            class="modal__input form-input"
+            placeholder="Пароль"
+            type="password"
+            name="password"
+          />
           <div class="modal__error" v-if="passwordError.length">
             {{ passwordError }}
           </div>
@@ -80,10 +92,6 @@ export default {
       return true;
     },
     passwordValidation() {
-      if (this.password.length < 6 || this.password.length >= 20) {
-        this.passwordError = "Длина пароля 6-20 символов";
-        return false;
-      }
       this.passwordError = "";
       return true;
     },
@@ -107,10 +115,8 @@ export default {
       return new Promise(resolve => {
         this.$refs.modalBase.showSuccess();
         setTimeout(() => {
-          this.fio = "";
-          this.phone = "";
-          this.comment = "";
-          this.$refs.modalWindowMask.clearPhone();
+          this.username = "";
+          this.password = "";
           this.$refs.modalBase.hideSuccess();
           this.$refs.modalBase.close();
           resolve();

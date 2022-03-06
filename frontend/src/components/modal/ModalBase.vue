@@ -2,10 +2,10 @@
   <div v-show="isOpen" @click="close" ref="modal" class="modal">
     <div @click.stop class="modal__body">
       <slot name="modal-error" v-if="isError">
-        <div class="modal__error">
-          <div class="modal__image modal__image_error"></div>
-          <h2 class="modal__title modal__title_error">Ой!</h2>
-          <p class="modal__description modal__description_error">
+        <div class="modal__send-error modal-error">
+          <div class="modal-error__image"></div>
+          <h2 class="modal-error__title">Ой!</h2>
+          <p class="modal-error__description">
             Что-то пошло не так. Попробуйте повторить запрос.
           </p>
         </div>
@@ -130,6 +130,7 @@ export default {
   text-align: center;
 
   &__body {
+    position: relative;
     width: 100%;
     height: 100%;
     padding: toRemMob(22) toRemMob(18) toRemMob(18) toRemMob(18);
@@ -245,6 +246,47 @@ export default {
 
     }
   }
+}
+
+.modal-error {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: $body-background;
+  border-radius: inherit;
+  color: $white-color;
+
+  &__image {
+    width: toRemMob(50);
+    height: toRemMob(50);
+    margin-bottom: toRemMob(10);
+    background: url("../../assets/images/modals/modal_error.svg") no-repeat center center;
+    background-size: contain;
+    @include _desktop {
+      width: toRem(80);
+      height: toRem(80);
+      margin-bottom: toRem(15);
+    }
+  }
+
+  &__title {
+    font-size: toRemMob(30);
+    @include _desktop {
+      font-size: toRem(40);
+    }
+  }
+
+  &__description {
+    max-width: 70%;
+  }
+
 }
 
 </style>
