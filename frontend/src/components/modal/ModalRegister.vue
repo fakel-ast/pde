@@ -158,10 +158,10 @@ export default {
       return new Promise((resolve) => {
         this.$refs.modalBase.showSuccess();
         setTimeout(() => {
-          this.fio = "";
-          this.phone = "";
-          this.comment = "";
-          this.$refs.modalWindowMask.clearPhone();
+          this.username = "";
+          this.email = "";
+          this.password = "";
+          this.group = {};
           this.$refs.modalBase.hideSuccess();
           this.$refs.modalBase.close();
           resolve();
