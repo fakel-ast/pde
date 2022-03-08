@@ -74,28 +74,44 @@
             <span class="not-auth__link link" @click="openModalLogin">войдите или зарегистрируйтесь!</span>
           </div>
           <template v-else>
-            <div v-if="task.type === 'text_answer'" class="task-answers__answer answer-form">
+            <div
+              :class="{'code-form': task.type === 'code_answer'}"
+              class="task-answers__answer answer-form"
+            >
               <label for="answer" class="answer-form__title">
-                Вставьте ответ в поле:
+                {{ task.type === "text_answer" ? "Вставьте ответ в поле:" : "Вставьте ваш код ниже:" }}
               </label>
-              <form class="answer-form__form">
+              <form
+                :class="{'code-form__form': task.type === 'code_answer'}"
+                class="answer-form__form answer-form"
+              >
                 <input
+                  v-if="task.type === 'text_answer'"
+                  @input="textAnswerError = ''"
+                  v-model="textAnswer"
                   id="answer"
                   type="text"
                   class="answer-form__input form-input"
                   name="answer"
                   placeholder="Ваш ответ"
                 />
-                <button class="button answer-form__button">Проверить</button>
-              </form>
-            </div>
-            <div v-else-if="task.type === 'code_answer'" class="task-answers__answer answer-form code-form">
-              <label for="code" class="answer-form__title">
-                Вставьте ваш код ниже:
-              </label>
-              <form class="answer-form__form code-form__form">
-                <textarea ref="codeTextArea" id="code" type="text" name="answer" placeholder="Ваш ответ"/>
-                <button class="button code-form__button">Проверить</button>
+                <textarea
+                  v-else-if="task.type === 'code_answer'"
+                  ref="codeTextArea"
+                  type="text"
+                  name="answer"
+                  placeholder="Ваш ответ"
+                />
+                <button
+                  @click.prevent="checkAnswer"
+                  :class="{ 'code-form__button': task.type === 'code_answer' }"
+                  class="button answer-form__button"
+                >
+                  Проверить
+                </button>
+                <p v-if="textAnswerError.length" class="answer-form__error">
+                  {{ textAnswerError }}
+                </p>
               </form>
             </div>
             <div class="task-answers__old-answers old-answers">
@@ -240,9 +256,10 @@ export default {
       isOpenHints: false,
       isOpenStatistics: false,
       durationTime: 300,
-      code: "",
       codeMirror: null,
       task: {},
+      textAnswer: "",
+      textAnswerError: "",
     };
   },
   created() {
@@ -277,7 +294,7 @@ export default {
       return filesize(size);
     },
     getAnswerDate(date) {
-      return moment(date).locale("ru").format("MM:MM:YYYY в H:mm");
+      return moment(date).locale("ru").format("DD:MM:YYYY в H:mm");
     },
     getStatistics() {
       if (!this.task) return {};
@@ -286,6 +303,28 @@ export default {
       console.log(wrongPercent);
       console.log(this.task.wrong_answers_count || 0);
       return { successPercent, wrongPercent };
+    },
+    async checkAnswer() {
+      let answer = "";
+      if (this.task.type === "text_answer") {
+        answer = this.textAnswer;
+        if (!answer.length) {
+          this.textAnswerError = "Ответ не введен";
+          return false;
+        }
+      }
+      try {
+        const { data } = await Axios.post("tasks/answers/", { task: this.task.id, answer });
+        this.task.answers = (this.task.answers || []);
+        if (Object.entries(data.new_answer)) {
+          this.task.answers.splice(0, 0, data.new_answer);
+          if (data.new_answer.is_success) {
+            this.task.is_solved = true;
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
 };
@@ -566,6 +605,7 @@ export default {
   }
 
   &__form {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -577,6 +617,14 @@ export default {
 
   &__button {
     margin-left: toRem(20);
+  }
+
+  &__error {
+    position: absolute;
+    bottom: toRem(-20);
+    left: toRem(24);
+    font-size: toRem(15);
+    color: $red-color;
   }
 }
 
