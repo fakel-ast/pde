@@ -63,7 +63,7 @@
             </ul>
           </slide-up-down>
         </div>
-        <div v-if="task.type === 'text_answer'" class="task-content__answers task-answers task-content-block">
+        <div class="task-content__answers task-answers task-content-block">
           <div class="task-answers__header">
             <p class="task-answers__title task-content__title">
               Ответ
@@ -73,92 +73,79 @@
             <span class="not-auth__text">Для этого&nbsp;</span>
             <span class="not-auth__link link" @click="openModalLogin">войдите или зарегистрируйтесь!</span>
           </div>
-          <div v-else class="task-answers__answer answer-form">
-            <label for="answer" class="answer-form__title">
-              Вставьте ответ в поле:
-            </label>
-            <form class="answer-form__form">
-              <input
-                id="answer"
-                type="text"
-                class="answer-form__input form-input"
-                name="answer"
-                placeholder="Ваш ответ"
-              />
-              <button class="button answer-form__button">Проверить</button>
-            </form>
-          </div>
-          <div class="task-answers__old-answers old-answers">
-            <p class="old-answers__title task-content__title">
-              Мои ответы
-            </p>
-            <p v-if="!task.answers" class="old-answers__empty">
-              Ваших ответов не найдено.
-            </p>
-            <ul v-else class="old-answers__list">
-              <li
-                v-for="answer in task.answers"
-                :key="answer.id"
-                class="old-answers__item"
-              >
-                <p class="old-answers__answer">
-                  {{ answer.answer }}
-                </p>
-                <p class="old-answers__date">
-                  {{ getAnswerDate(answer.created) }}
-                </p>
-                <p
-                  :class="{ 'success-text': answer.is_success, 'error-text': !answer.is_success }"
-                  class="old-answers__status"
+          <template v-else>
+            <div v-if="task.type === 'text_answer'" class="task-answers__answer answer-form">
+              <label for="answer" class="answer-form__title">
+                Вставьте ответ в поле:
+              </label>
+              <form class="answer-form__form">
+                <input
+                  id="answer"
+                  type="text"
+                  class="answer-form__input form-input"
+                  name="answer"
+                  placeholder="Ваш ответ"
+                />
+                <button class="button answer-form__button">Проверить</button>
+              </form>
+            </div>
+            <div v-else-if="task.type === 'code_answer'" class="task-answers__answer answer-form code-form">
+              <label for="code" class="answer-form__title">
+                Вставьте ваш код ниже:
+              </label>
+              <form class="answer-form__form code-form__form">
+                <textarea ref="codeTextArea" id="code" type="text" name="answer" placeholder="Ваш ответ"/>
+                <button class="button code-form__button">Проверить</button>
+              </form>
+            </div>
+            <div class="task-answers__old-answers old-answers">
+              <p class="old-answers__title task-content__title">
+                Мои ответы
+              </p>
+              <p v-if="!task.answers" class="old-answers__empty">
+                Ваших ответов не найдено.
+              </p>
+              <ul v-else class="old-answers__list">
+                <li
+                  v-for="answer in task.answers"
+                  :key="answer.id"
+                  class="old-answers__item"
                 >
-                  {{ answer.is_success ? "Верно" : "Неверно" }}
-                </p>
-              </li>
-            </ul>
-          </div>
+                  <p class="old-answers__answer">
+                    {{ answer.answer }}
+                  </p>
+                  <p class="old-answers__date">
+                    {{ getAnswerDate(answer.created) }}
+                  </p>
+                  <p
+                    :class="{ 'success-text': answer.is_success, 'error-text': !answer.is_success }"
+                    class="old-answers__status"
+                  >
+                    {{ answer.is_success ? "Верно" : "Неверно" }}
+                  </p>
+                </li>
+              </ul>
+            </div>
+          </template>
         </div>
-        <div v-else-if="task.type === 'code_answer'" class="task-content__answers task-answers task-content-block">
-          <div class="task-answers__header">
-            <p class="task-answers__title task-content__title">
-              Ответ
-            </p>
-          </div>
-          {{ code }}
-          <div class="task-answers__answer answer-form code-form">
-            <label for="code" class="answer-form__title">
-              Вставьте ваш код ниже:
-            </label>
-            <form class="answer-form__form code-form__form">
-              <textarea ref="codeTextArea" id="code" type="text" name="answer" placeholder="Ваш ответ"/>
-              <button class="button code-form__button">Проверить</button>
-            </form>
-          </div>
-          <div class="task-answers__old-answers old-answers">
-            <p class="old-answers__title task-content__title">
-              Мои ответы
-            </p>
-            <p class="old-answers__empty">
-              Ваших ответов не найдено.
-            </p>
-            <ul class="old-answers__list">
-              <li class="old-answers__item">
-                <p class="old-answers__answer">Ответ #3 (2 строки)</p>
-                <p class="old-answers__date">29.12.2021 20:25 GMT</p>
-                <p class="old-answers__status success-text">Верно</p>
-              </li>
-              <li class="old-answers__item">
-                <p class="old-answers__answer">Ответ #2 (2 строки)</p>
-                <p class="old-answers__date">29.12.2021 20:25 GMT</p>
-                <p class="old-answers__status error-text">Верно</p>
-              </li>
-              <li class="old-answers__item">
-                <p class="old-answers__answer">Ответ #3 (2 строки)</p>
-                <p class="old-answers__date">29.12.2021 20:25 GMT</p>
-                <p class="old-answers__status error-text">Верно</p>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <!-- Ответы для кода -->
+        <!--            <ul class="old-answers__list">-->
+        <!--              <li class="old-answers__item">-->
+        <!--                <p class="old-answers__answer">Ответ #3 (2 строки)</p>-->
+        <!--                <p class="old-answers__date">29.12.2021 20:25 GMT</p>-->
+        <!--                <p class="old-answers__status success-text">Верно</p>-->
+        <!--              </li>-->
+        <!--              <li class="old-answers__item">-->
+        <!--                <p class="old-answers__answer">Ответ #2 (2 строки)</p>-->
+        <!--                <p class="old-answers__date">29.12.2021 20:25 GMT</p>-->
+        <!--                <p class="old-answers__status error-text">Верно</p>-->
+        <!--              </li>-->
+        <!--              <li class="old-answers__item">-->
+        <!--                <p class="old-answers__answer">Ответ #3 (2 строки)</p>-->
+        <!--                <p class="old-answers__date">29.12.2021 20:25 GMT</p>-->
+        <!--                <p class="old-answers__status error-text">Верно</p>-->
+        <!--              </li>-->
+        <!--            </ul>-->
         <div class="task-content__statistics task-statistics task-content-block">
           <div class="task-hints__header" @click="isOpenStatistics = !isOpenStatistics">
             <p class="task-hints__title task-content__title">

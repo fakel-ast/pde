@@ -182,7 +182,7 @@ class TaskViews(MyMethodView):
                     TaskFile.file.alias('file'),
                     fn.CONCAT(
                         CONFIG.PATH_TO_TASK_TASK, '/',
-                        TaskFile.task_id, '/files/',
+                        TaskFile.task_id, '/',
                         TaskFile.file
                     ).alias('file_link'),
                 ).alias('task_file_join'),
