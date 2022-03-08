@@ -379,6 +379,7 @@ class CheckTaskAnswer(MyMethodView):
             task_id = self.data.get('task', 0)
             answer_for_test = self.data.get('answer', '')
             is_success_answer = False
+            data_answer = {}
 
             task = Task.select(
                 Task.id,
@@ -398,15 +399,29 @@ class CheckTaskAnswer(MyMethodView):
                 return {'errors': True, 'message': 'Not valid task\'s id'}, 404
 
             if task.type_title == 'text_answer':
+                # Check on true correct answer
                 is_success_answer = answer_for_test == task.answer
-                TaskAnswer(
+                answer = TaskAnswer.create(
                     task_id=task_id,
                     user=current_user.id,
                     answer=answer_for_test,
                     is_success=is_success_answer,
-                ).save()
+                )
+                # create data for front
+                data_answer = {
+                    'answer': answer.answer,
+                    'created': answer.created,
+                    'id': answer.id,
+                    'is_success': answer.is_success
+                }
 
-            return {'errors': False, 'is_success': is_success_answer}
+                # if task is resolved save it in UserSolvedTask
+                if is_success_answer:
+                    UserSolvedTask.create(
+                        user_id=current_user.id,
+                        task_id=task_id
+                    )
+            return {'errors': False, 'is_success': is_success_answer, 'new_answer': data_answer}
 
         except BadRequest as e:
             abort(e.code)

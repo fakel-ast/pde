@@ -46,7 +46,7 @@ class MyMethodView(MethodView):
                 abort(403)
 
         if self.schema:
-            if not app.debug:
+            if not app.debug or 'csrf-token' in self.data:
                 self.schema['properties']['csrf-token'] = {"type": "string", "pattern": "^.{10,}$"}
             self.data = validate_json(self.schema, self.data)
 
