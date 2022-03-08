@@ -30,7 +30,6 @@ def validate_json(schema, data=dict(), is_abort=True):
     """Проверка данных с помощью json схемы"""
     # noinspection PyBroadException
     try:
-        data = data or request.get_json(force=True, cache=False)
         jsonschema.validate(data, schema)
         return data
     except Exception as e:

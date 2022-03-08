@@ -138,6 +138,16 @@ class Session(BaseModel):
         table_name = TABLE_PREFIX + 'session'
 
 
+class TaskTextAnswer(BaseModel):
+    """For save task answer if type task == text_answer"""
+
+    task = ForeignKeyField(Task, unique=True)
+    answer = CharField(max_length=512, verbose_name='Правльные ответы для текстовой задачи')
+
+    class Meta:
+        table_name = TABLE_PREFIX + 'task_text_answer'
+
+
 @login.user_loader
 def load_user(user_id):
     return User.get(int(user_id))

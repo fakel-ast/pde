@@ -5,14 +5,15 @@ import uuid
 from datetime import datetime, timedelta
 
 import jwt
-from flask import current_app, request, session
+from flask import current_app, request, session, abort
 from flask_login import current_user, login_user
 from peewee import JOIN, SQL, NodeList, fn
 from playhouse.shortcuts import model_to_dict
+from werkzeug.exceptions import BadRequest
 
 from backend.database.models import (Group, Task, TaskAnswer, TaskCategory,
                                      TaskFile, TaskHint, TaskType,
-                                     UserSolvedTask, User, Session)
+                                     UserSolvedTask, User, Session, TaskTextAnswer)
 from backend.base import CONFIG, MyMethodView, user_required, auth_user
 from backend.functions import recursive_parse, get_current_user
 
@@ -353,4 +354,63 @@ class GroupsVies(MyMethodView):
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             current_app.logger.error('Get groups: ' + format(e) + ' in ' + format(exc_tb.tb_lineno))
+            return {'errors': True, 'message': 'Code error'}, 500
+
+
+class CheckTaskAnswer(MyMethodView):
+    """Views for check task's success answer"""
+    decorators = [user_required]
+
+    def post(self, *args, **kwargs):
+
+        try:
+            self.schema = {
+                "type": "object",
+                "properties": {
+                    "answer": {"pattern": r"^.{0,512}$"},
+                    "task": {"type": "number", "pattern": r"^[\d]{1,11}$"},
+                },
+                "additionalProperties": False,
+                "required": ["task", "answer"]
+            }
+
+            super(CheckTaskAnswer, self).post(*args, **kwargs)
+
+            task_id = self.data.get('task', 0)
+            answer_for_test = self.data.get('answer', '')
+            is_success_answer = False
+
+            task = Task.select(
+                Task.id,
+                TaskTextAnswer.answer,
+                TaskType.title.alias('type_title'),
+            ).join(
+                TaskType
+            ).join_from(
+                Task,
+                TaskTextAnswer,
+                JOIN.LEFT_OUTER
+            ).where(
+                Task.id == task_id
+            ).objects().first()
+
+            if not task:
+                return {'errors': True, 'message': 'Not valid task\'s id'}, 404
+
+            if task.type_title == 'text_answer':
+                is_success_answer = answer_for_test == task.answer
+                TaskAnswer(
+                    task_id=task_id,
+                    user=current_user.id,
+                    answer=answer_for_test,
+                    is_success=is_success_answer,
+                ).save()
+
+            return {'errors': False, 'is_success': is_success_answer}
+
+        except BadRequest as e:
+            abort(e.code)
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            current_app.logger.error('Save answer: ' + format(e) + ' in ' + format(exc_tb.tb_lineno))
             return {'errors': True, 'message': 'Code error'}, 500
