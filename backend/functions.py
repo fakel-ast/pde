@@ -79,7 +79,7 @@ def recursive_parse(dict_for_parse):
 def get_current_user(*args, **kwargs):
     """Model select for get current user"""
     from backend.base import CONFIG
-    from database.models import User
+    from backend.database.models import User
     user = User.select(
         User.id,
         User.username,
