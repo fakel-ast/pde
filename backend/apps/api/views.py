@@ -100,6 +100,9 @@ class TaskViews(MyMethodView):
         :param category_slug: slug TaskCategory
         """
 
+        class current_user:
+            id = 11
+
         try:
             task = Task.select(
                 Task.id,
@@ -249,33 +252,47 @@ class UserView(MyMethodView):
 
     def post(self, *args, **kwargs):
         try:
-            if self.data.get('password') and self.data.get('username') and \
-                    self.data.get('group') and self.data.get('email'):
 
-                group = Group.get_or_none(id=self.data.get('group'))
-                if not group:
-                    return {'errors': True, 'msg': 'Not valid group\'s id'}, 400
+            self.schema = {
+                "type": "object",
+                "properties": {
+                    "username": {"type": "string", "pattern": r"^[\w \-А-я_]{1,128}$"},
+                    "password": {"type": "string", "pattern": r".*$"},
+                    "email": {"type": "string", "pattern": r"^([\wА-я.-]+)@([\w.-]+)\.([A-z]{1,10})$"},
+                    "group": {"type": "number", "pattern": r"^\d{1,11}$"},
+                },
+                "additionalProperties": False,
+                "required": ["username", "password", "email", "group"]
+            }
 
-                password = self.data.get('password') or ''
-                username = self.data.get('username') or ''
+            super(UserView, self).post(*args, **kwargs)
 
-                if not re.search(r'(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}', password):
-                    return {'errors': True, 'msg': 'Bad password'}, 400
-                if User.get_or_none(username=username):
-                    return {'errors': True, 'msg': 'Username already use'}, 400
+            group = Group.get_or_none(id=self.data.get('group'))
+            if not group:
+                return {'errors': True, 'msg': 'Not valid group\'s id'}, 400
 
-                user = User()
-                user.create_user(
-                    password=self.data.get('password'),
-                    username=self.data.get('username'),
-                    email=self.data.get('email')
-                )
-                user.group = group
-                user.save()
-                if user:
-                    auth_user(user=user)
-                    return {'errors': False, 'user': model_to_dict(user)}, 201
-            return {'errors': True, 'message': 'Not valid data'}, 400
+            password = self.data.get('password') or ''
+            username = self.data.get('username') or ''
+
+            if not re.search(r'(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}', password):
+                return {'errors': True, 'msg': 'Bad password'}, 400
+            if User.get_or_none(username=username):
+                return {'errors': True, 'msg': 'Username already use'}, 400
+
+            user = User()
+            user.create_user(
+                password=self.data.get('password'),
+                username=self.data.get('username'),
+                email=self.data.get('email')
+            )
+            user.group = group
+            user.save()
+            if user:
+                auth_user(user=user)
+                return {'errors': False, 'user': model_to_dict(user)}, 201
+
+        except BadRequest as e:
+            abort(e.code)
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             current_app.logger.error('Create user: ' + format(e) + ' in ' + format(exc_tb.tb_lineno))

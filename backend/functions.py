@@ -10,19 +10,18 @@ from peewee import fn
 def csrf_protect(val):
     """Проверка CSRF токена"""
     csrf = session.pop('csrf_token', None)
-    count = session.pop('csrf_count', None)
     if not csrf or csrf != val or count is None or count > 50:
         return False
-    session['csrf_count'] = count + 1
     session['csrf_token'] = csrf
     return True
 
 
 def csrf_token():
     """Генерация CSRF токена"""
-    session['csrf_count'] = 0
-    if 'csrf_token' not in session:
+    csrf_expiration = session.get('csrf_expiration', None)
+    if not (csrf_expiration and csrf_expiration > datetime.utcnow().timestamp()) or 'csrf_token' not in session:
         session['csrf_token'] = str(uuid.uuid4().hex)
+        session['csrf_expiration'] = (datetime.utcnow() + timedelta(minutes=30)).timestamp()
     return session['csrf_token']
 
 
