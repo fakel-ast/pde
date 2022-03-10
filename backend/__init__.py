@@ -133,6 +133,6 @@ def application_routes(app):
         app.permanent_session_lifetime = timedelta(days=30)
 
     @app.after_request
-    def after_request(response):
-        response.headers['Strict-Transport-Security'] = 'max-age=2592000; includeSubDomains'
+    def teardown(response):
+        response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
         return response
