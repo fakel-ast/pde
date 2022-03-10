@@ -16,7 +16,7 @@
     :get-users-suffix="getUsersSuffix"
     :open-modal-login="openModalLogin"
   />
-  <footer-component :categories="categories" />
+  <footer-component :categories="categories"/>
 </template>
 
 <script>
@@ -87,14 +87,17 @@ export default {
       try {
         const { data } = await Axios.post("users/login/", dataToRequest);
         this.$store.commit("updateCurrentUser", data?.user || {});
-        return { success: !data?.errors };
+        return { success: !data?.errors, isReopen: data?.errors };
       } catch (error) {
         console.error(error);
         if (error?.response?.status === 400) {
           this.$refs.modalLogin.notValidAuthData();
           return { success: false, isReopen: true, isNotShowError: true };
+        } else if (error?.response?.status === 403) {
+          this.$refs.modalLogin.notValidAuthData("Попробуйте авторизоваться позже!");
+          return { success: false, isReopen: true, isNotShowError: true };
         }
-        return { success: false };
+        return { success: false, isReopen: true };
       }
     },
     async sendModalRegister(dataToRequest) {
@@ -112,12 +115,13 @@ export default {
       if (modalResult && Object.entries(modalResult).length) {
         // Fake send form to backend
         const result = await this.sendModalLogin(modalResult);
+        console.log(result);
         // if success back response show success and close modal, else show error
         if (result?.success) {
           await this.$refs.modalLogin.showSuccess();
         } else {
           if (!result?.isNotShowError) {
-            await this.$refs.modalLogin.showError();
+            await this.$refs.modalLogin.showError(result?.message);
           }
           // Тут костыль небольшой. Что бы повторить все эти действия, мы вызываем сам себя :)
           if (result?.isReopen) this.openModalLogin();

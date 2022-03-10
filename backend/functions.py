@@ -9,10 +9,10 @@ from peewee import fn
 
 def csrf_protect(val):
     """Проверка CSRF токена"""
-    csrf = session.pop('csrf_token', None)
-    if not csrf or csrf != val or count is None or count > 50:
+    csrf = session.get('csrf_token', None)
+    csrf_expiration = session.get('csrf_expiration', None)
+    if not csrf or csrf != val or not (csrf_expiration and csrf_expiration > datetime.utcnow().timestamp()):
         return False
-    session['csrf_token'] = csrf
     return True
 
 
@@ -87,7 +87,6 @@ def get_current_user(*args, **kwargs):
             User.id, '/', User.avatar
         ).alias('avatar'),
         User.fio,
-        User.is_blocked,
         User.is_teacher,
         User.last,
         User.online,
@@ -95,4 +94,5 @@ def get_current_user(*args, **kwargs):
     ).where(
         User.id == current_user.id
     ).dicts().first()
+
     return user

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from flask_login import AnonymousUserMixin, UserMixin
@@ -41,3 +43,13 @@ class CustomUserMixin(UserMixin):
         self.username = username
         self.fio = fio
         self.email = email
+
+    def is_blocked(self):
+        """проверка блокировки пользователя"""
+        print(self.blocked)
+        if self.blocked:
+            if self.blocked > datetime.utcnow():
+                return True
+            self.blocked = None
+            self.save(only=['blocked', 'updated'])
+        return False

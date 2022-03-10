@@ -63,7 +63,6 @@ def register_blueprints(app_name):
     from backend.database.models import BaseModel
 
     if app_name.debug:
-        pass
         pw.database.create_tables(BaseModel.__subclasses__())
 
     from backend.apps.api import api

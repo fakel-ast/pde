@@ -118,8 +118,8 @@ export default {
         resolve();
       });
     },
-    notValidAuthData() {
-      this.authError = "Неверные логи или пароль";
+    notValidAuthData(errorText) {
+      this.authError = errorText || "Неверные логи или пароль";
     },
   },
   computed: {

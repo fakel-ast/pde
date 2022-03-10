@@ -99,12 +99,13 @@ class User(BaseModel, CustomUserMixin):
     errors = IntegerField(
         default=0, verbose_name='Количество ошибок авторизации', help_text='Количество ошибок авторизации'
     )
-    is_blocked = BooleanField(default=False, verbose_name='Флаг блокировки пользоваетля', null=True)
     group = ForeignKeyField(Group, verbose_name='Группа студента', null=True, on_delete=CASCADE)
     is_teacher = BooleanField(default=False, verbose_name='Является преподавателем')
     avatar = CharField(max_length=64, verbose_name='Аватар пользователя', null=True)
     online = BooleanField(default=False, verbose_name='Статус онлайн')
     last = DateTimeField(null=True, verbose_name='Дата последнего входа', default=None)
+    blocked = DateTimeField(null=True, default=None, verbose_name='Дата снятия блокировки')
+    auth_error_count = SmallIntegerField(default=0, null=True, verbose_name='Количество ошибок при авторизации')
 
     class Meta:
         table_name = TABLE_PREFIX + 'user'

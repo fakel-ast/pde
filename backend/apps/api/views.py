@@ -100,9 +100,6 @@ class TaskViews(MyMethodView):
         :param category_slug: slug TaskCategory
         """
 
-        class current_user:
-            id = 11
-
         try:
             task = Task.select(
                 Task.id,
@@ -314,10 +311,20 @@ class LoginView(MyMethodView):
 
     def post(self, *args, **kwargs):
         try:
-
             user = User.select().where(User.username == self.data.get('username', '')).first()
+            if user.is_blocked():
+                return {'errors': True, 'message': 'Попробуйте авторизоваться позже!'}, 403
             if user and user.check_password(self.data.get('password', '')):
                 return auth_user(user=user)
+
+            user.auth_error_count = (user.auth_error_count or 0) + 1
+            user.save(only=['auth_error_count', 'updated'])
+            if user.auth_error_count >= 7:
+                user.blocked = datetime.utcnow() + timedelta(hours=1)
+                user.auth_error_count = 0
+                user.save(only=['auth_error_count', 'updated', 'blocked'])
+                return {'errors': True, 'message': 'Попробуйте авторизоваться позже!'}, 403
+
             return {'errors': True, 'message': 'Not valid data'}, 400
 
         except Exception as e:
