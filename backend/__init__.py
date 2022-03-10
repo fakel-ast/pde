@@ -134,5 +134,6 @@ def application_routes(app):
 
     @app.after_request
     def teardown(response):
+        response.headers['X-Frame-Options'] = 'DENY'
         response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
         return response
