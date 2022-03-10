@@ -21,7 +21,7 @@ def csrf_token():
     csrf_expiration = session.get('csrf_expiration', None)
     if not (csrf_expiration and csrf_expiration > datetime.utcnow().timestamp()) or 'csrf_token' not in session:
         session['csrf_token'] = str(uuid.uuid4().hex)
-        session['csrf_expiration'] = (datetime.utcnow() + timedelta(minutes=30)).timestamp()
+        session['csrf_expiration'] = (datetime.utcnow() + timedelta(minutes=15)).timestamp()
     return session['csrf_token']
 
 
