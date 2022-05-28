@@ -453,3 +453,41 @@ class CheckTaskAnswer(MyMethodView):
             exc_type, exc_obj, exc_tb = sys.exc_info()
             current_app.logger.error('Save answer: ' + format(e) + ' in ' + format(exc_tb.tb_lineno))
             return {'errors': True, 'message': 'Code error'}, 500
+
+
+class UserRatings(MyMethodView):
+
+    def get(self, *args, **kwargs):
+        try:
+            ratings = Task.select(
+                User.id.alias('user_id'),
+                User.username,
+                User.fio,
+                Group.short_title.alias('group_title'),
+                fn.SUM(Task.point_count).alias('points_count')
+            ).join(
+                TaskAnswer.select(
+                    TaskAnswer.task_id,
+                    TaskAnswer.user_id,
+                ).distinct(
+                ).where(
+                    TaskAnswer.is_success == 1
+                ).alias('task_answer'),
+                on=(SQL('task_answer.task_id') == Task.id)
+            ).join(
+                User,
+                on=(SQL('task_answer.user_id') == User.id)
+            ).join(
+                Group
+            ).group_by(
+                User.id
+            ).order_by(
+                SQL('points_count').desc()
+            ).dicts()
+
+            return {'errors': False, 'ratings': list(ratings)}
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            current_app.logger.error('Get ratings: ' + format(e) + ' in ' + format(exc_tb.tb_lineno))
+            return {'errors': True, 'message': 'Code error'}, 500
+

@@ -6,6 +6,7 @@ api.add_url_rule('/categories/<category_slug>/tasks/', view_func=views.TasksView
 api.add_url_rule('/categories/<category_slug>/tasks/<task_id>/', view_func=views.TaskViews.as_view('task_view'))
 api.add_url_rule('/groups/', view_func=views.GroupsVies.as_view('groups_view'))
 api.add_url_rule('/tasks/answers/', view_func=views.CheckTaskAnswer.as_view('check_task_answer'))
+api.add_url_rule('/user-ratings/', view_func=views.UserRatings.as_view('user_ratings'))
 
 api.add_url_rule('/users/', view_func=views.UserView.as_view('create_user'))
 api.add_url_rule('/users/login/', view_func=views.LoginView.as_view('login_user'))

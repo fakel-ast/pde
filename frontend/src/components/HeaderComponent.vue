@@ -30,7 +30,7 @@
           :src="$store.getters.currentUser.avatar ? $host + $store.getters.currentUser.avatar : require('@/assets/images/header/kaonasi.jpg')"
           alt="avatar"
         >
-        <router-link :to="'asdas'" class="button header-profile__button">Профиль</router-link>
+        <router-link :to="{name: 'Profile'}" class="button header-profile__button">Профиль</router-link>
         <div @click="logout" class="header-profile__logout">
           <div class="header-profile__logout-image"></div>
         </div>
@@ -45,9 +45,17 @@
     </div>
     <nav class="header__menu menu" :class="{ active: isOpenMenu }">
       <ul class="menu__list">
-        <li class="menu__item">Профиль</li>
-        <li class="menu__item">Задачи</li>
-        <li class="menu__item">
+        <li class="menu__item" @click="toggleHeaderMenu">
+          <router-link :to="{ name: 'Profile' }">
+            Профиль
+          </router-link>
+        </li>
+        <li class="menu__item" @click="toggleHeaderMenu">
+          <router-link :to="{ name: 'Categories' }">
+            Задачи
+          </router-link>
+        </li>
+        <li class="menu__item" @click="logout(), toggleHeaderMenu()">
           Выйти из аккаунта
         </li>
       </ul>
@@ -103,6 +111,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    z-index: 3;
     @include _desktop {
       padding-right: toRem(40);
       border-right: 1px solid $grey-color;
@@ -290,6 +299,7 @@ export default {
       width: toRem(22);
       height: toRem(20);
       background: url("../assets/images/header/logout.svg") no-repeat center center;
+      background-size: contain;
       transform: translateX(7%);
     }
   }

@@ -100,7 +100,7 @@ def application_routes(app):
 
     @app.route('/')
     @app.route('/<category_slug>/', defaults={'category_slug': ''})
-    @app.route('/<category_slug>/<task_id>', defaults={'category_slug': '', 'task_id': ''})
+    @app.route('/<category_slug>/<task_id>/', defaults={'category_slug': '', 'task_id': ''})
     def index(category_slug: str = '', task_id: str = '', *args, **kwargs):
         return render_template('index.html')
 

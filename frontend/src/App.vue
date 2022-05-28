@@ -3,7 +3,6 @@
   <modal-login
     ref="modalLogin"
     :open-modal-register="openModalRegister"
-
   />
   <modal-register
     ref="modalRegister"
@@ -16,7 +15,7 @@
     :get-users-suffix="getUsersSuffix"
     :open-modal-login="openModalLogin"
   />
-  <footer-component :categories="categories"/>
+  <footer-component :open-modal-login="openModalLogin" :categories="categories"/>
 </template>
 
 <script>
@@ -25,6 +24,7 @@ import FooterComponent from "@/components/FooterComponent";
 import ModalLogin from "@/components/modal/ModalLogin";
 import ModalRegister from "@/components/modal/ModalRegister";
 import {Axios} from "@/assets/js/http-common";
+import {computed} from "vue";
 
 export default {
   name: "App",
@@ -34,15 +34,27 @@ export default {
     ModalLogin,
     ModalRegister,
   },
+  provide() {
+    return {
+      deviceWidth: computed(() => this.deviceWidth),
+    };
+  },
   created() {
     this.getCurrentUser();
     this.getCategories();
     this.getGroups();
   },
+  mounted() {
+    window.addEventListener("resize", this.onResize);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.onResize);
+  },
   data() {
     return {
       categories: [],
       groups: [],
+      deviceWidth: window.innerWidth,
     };
   },
   methods: {
@@ -143,6 +155,9 @@ export default {
           this.openModalRegister();
         }
       }
+    },
+    onResize() {
+      this.deviceWidth = window.innerWidth;
     },
   },
 };

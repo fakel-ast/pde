@@ -12,13 +12,12 @@
                 <router-link class="footer-nav__link footer-link" :to="{name: 'Categories'}">Задачи</router-link>
               </li>
               <li class="footer-nav__item">
-                <router-link class="footer-nav__link footer-link" to="/asdasd/">Рейтинг</router-link>
+                <router-link class="footer-nav__link footer-link" :to="{name: 'RatingPage'}">Рейтинг</router-link>
               </li>
-              <li class="footer-nav__item">
-                <router-link class="footer-nav__link footer-link" to="/asdasd/">Обратная связь</router-link>
-              </li>
-              <li class="footer-nav__item">
-                <router-link class="footer-nav__link footer-link" to="/asdasd/">Вход/Регистрация</router-link>
+              <li class="footer-nav__item" @click="openModalLogin">
+                <p class="footer-nav__link footer-link" >
+                  Вход/Регистрация
+                </p>
               </li>
             </ul>
           </nav>
@@ -52,6 +51,7 @@ export default {
   name: "FooterComponent",
   props: {
     categories: Array,
+    openModalLogin: Function,
   },
 };
 </script>
@@ -203,4 +203,7 @@ export default {
   }
 }
 
+.footer-link {
+  cursor: pointer;
+}
 </style>

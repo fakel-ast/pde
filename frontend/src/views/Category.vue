@@ -43,10 +43,14 @@
       </div>
       <div class="category__tasks tasks">
         <tasks-list
+          v-if="sortedTasks.length"
           :tasks="sortedTasks" :current-category="currentCategory"
           :get-solved-suffix="getSolvedSuffix"
           :get-users-suffix="getUsersSuffix"
         />
+        <div v-else>
+          Задачу в данном направлении отсутствуют
+        </div>
       </div>
     </div>
   </section>
@@ -91,7 +95,6 @@ export default {
     },
   },
   created() {
-    this.getTasks();
     document.addEventListener("click", event => {
       if (!event.target.closest(".category-sort")) {
         this.isOpenSortMenu = false;
@@ -112,6 +115,7 @@ export default {
       return this.isReverse ? tasks.reverse() : tasks;
     },
     currentCategory() {
+      this.getTasks();
       return this.categories.find((category) => category.slug === this.$route.params.categorySlug) || {};
     },
   },
