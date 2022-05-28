@@ -12,7 +12,7 @@
           <router-link class="header__link" :to="{ name: 'Categories' }">Задачи</router-link>
         </li>
         <li class="header__item">
-          <a class="header__link" href="#">Рейтинг</a>
+          <router-link class="header__link" :to="{ name: 'RatingPage' }">Рейтинг</router-link>
         </li>
       </ul>
     </nav>

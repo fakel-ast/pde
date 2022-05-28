@@ -7,6 +7,7 @@
       :current-category="currentCategory"
       :get-solved-suffix="getSolvedSuffix"
       :get-users-suffix="getUsersSuffix"
+      :get-points-count-suffix="getPointsCountSuffix"
     />
   </ul>
 </template>
@@ -21,6 +22,7 @@ export default {
     currentCategory: Object,
     getSolvedSuffix: Function,
     getUsersSuffix: Function,
+    getPointsCountSuffix: Function,
   },
   components: {
     TaskComponent,

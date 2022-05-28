@@ -13,6 +13,7 @@
     :categories="categories"
     :get-solved-suffix="getSolvedSuffix"
     :get-users-suffix="getUsersSuffix"
+    :get-points-count-suffix="getPointsCountSuffix"
     :open-modal-login="openModalLogin"
   />
   <footer-component :open-modal-login="openModalLogin" :categories="categories"/>
@@ -94,6 +95,14 @@ export default {
         return "пользователя";
       }
       return "пользователей";
+    },
+    getPointsCountSuffix(count) {
+      count = (count || 0).toString();
+      if (count[count.length - 1] === "1" && count.slice(count.length - 2) !== "11") return "очко";
+      else if (["2", "3", "4"].includes(count[count.length - 1]) && !["11", "12", "13", "14"].includes(count.slice(count.length - 2))) {
+        return "очка";
+      }
+      return "очков";
     },
     async sendModalLogin(dataToRequest) {
       try {

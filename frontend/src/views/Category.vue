@@ -47,6 +47,7 @@
           :tasks="sortedTasks" :current-category="currentCategory"
           :get-solved-suffix="getSolvedSuffix"
           :get-users-suffix="getUsersSuffix"
+          :get-points-count-suffix="getPointsCountSuffix"
         />
         <div v-else>
           Задачу в данном направлении отсутствуют
@@ -72,6 +73,7 @@ export default {
     categories: Object,
     getSolvedSuffix: Function,
     getUsersSuffix: Function,
+    getPointsCountSuffix: Function,
   },
   components: {
     TasksList,

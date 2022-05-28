@@ -18,16 +18,28 @@
               class="rating-body__item"
             >
               <p class="rating-user__text">
+                <span class="rating-user__text-bold" v-if="deviceWidth.value < 640">
+                  Место:
+                </span>
                 {{ index + 1 }}
               </p>
               <p class="rating-user__text">
+                <span class="rating-user__text-bold" v-if="deviceWidth.value < 640">
+                  Очки:
+                </span>
                 {{ userRating.points_count }}
-                очков
+                {{ getPointsCountSuffix(points_count) }}
               </p>
               <p class="rating-user__text">
+                <span class="rating-user__text-bold" v-if="deviceWidth.value < 640">
+                  ФИО:
+                </span>
                 {{ userRating.fio }}
               </p>
               <p class="rating-user__text">
+                 <span class="rating-user__text-bold" v-if="deviceWidth.value < 640">
+                  Группа:
+                </span>
                 {{ userRating.group_title }}
               </p>
             </li>
@@ -52,6 +64,10 @@ export default {
   created() {
     this.getUserRatings();
   },
+  inject: ["deviceWidth"],
+  props: {
+    getPointsCountSuffix: Function,
+  },
   methods: {
     async getUserRatings() {
       try {
@@ -75,36 +91,43 @@ export default {
 }
 
 .rating-header {
+  display: none;
   padding-bottom: toRem(22);
   border-bottom: 1px solid $grey-color;
-
+  @include _desktop {
+    display: block;
+  }
   &__list {
     display: flex;
   }
 
   &__item {
     width: 100%;
+    @include _desktop {
+      &:first-child {
+        max-width: toRem(179);
+      }
 
-    &:first-child {
-      max-width: toRem(179);
-    }
+      &:nth-child(2) {
+        max-width: toRem(233);
+      }
 
-    &:nth-child(2) {
-      max-width: toRem(233);
-    }
+      &:nth-child(3) {
+        max-width: toRem(555);
+      }
 
-    &:nth-child(3) {
-      max-width: toRem(555);
-    }
-
-    &:nth-child(4) {
-      max-width: toRem(270);
+      &:nth-child(4) {
+        max-width: toRem(270);
+      }
     }
   }
 }
 
 .rating-body {
-  padding-top: toRem(33);
+
+  @include _desktop {
+    padding-top: toRem(33);
+  }
 
   &__list {
     display: flex;
@@ -113,7 +136,12 @@ export default {
 
   &__item {
     display: flex;
+    flex-direction: column;
     align-items: center;
+
+    @include _desktop {
+      flex-direction: row;
+    }
 
     &:not(:first-child) {
       margin-top: toRem(32);
@@ -124,22 +152,29 @@ export default {
 .rating-user {
   &__text {
     width: 100%;
+    @include _desktop {
+      &:first-child {
+        max-width: toRem(179);
+      }
 
-    &:first-child {
-      max-width: toRem(179);
+      &:nth-child(2) {
+        max-width: toRem(233);
+      }
+
+      &:nth-child(3) {
+        max-width: toRem(555);
+      }
+
+      &:nth-child(4) {
+        max-width: toRem(270);
+      }
     }
 
-    &:nth-child(2) {
-      max-width: toRem(233);
+    &-bold {
+      font-weight: 600;
     }
 
-    &:nth-child(3) {
-      max-width: toRem(555);
-    }
 
-    &:nth-child(4) {
-      max-width: toRem(270);
-    }
   }
 
 }

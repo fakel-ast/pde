@@ -6,7 +6,7 @@
     <router-link class="task__link" :to="{ name: 'TaskDetail', params: { ...$route.params, taskId: task.id } }">
       <div class="task__header">
         <p class="task__title">{{ task.title }}</p>
-        <p class="task__points">+{{ task.point_count }} очков</p>
+        <p class="task__points">+{{ task.point_count }} {{ getPointsCountSuffix(task.point_count) }}</p>
       </div>
       <div class="task__footer">
         <p class="task__solvings">
@@ -29,6 +29,7 @@ export default {
     currentCategory: Object,
     getSolvedSuffix: Function,
     getUsersSuffix: Function,
+    getPointsCountSuffix: Function,
   },
   methods: {},
 };
