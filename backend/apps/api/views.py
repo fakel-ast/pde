@@ -491,3 +491,48 @@ class UserRatings(MyMethodView):
             current_app.logger.error('Get ratings: ' + format(e) + ' in ' + format(exc_tb.tb_lineno))
             return {'errors': True, 'message': 'Code error'}, 500
 
+
+class Profile(MyMethodView):
+
+    def get(self, user_id: int, *args, **kwargs) -> dict:
+        profile = User.select(
+            User,
+            Group.short_title.alias('group_title')
+        ).join(
+            Group
+        ).join(
+            Task.select(
+                User.id.alias('user_id'),
+                User.username,
+                User.fio,
+                Group.short_title.alias('group_title'),
+                fn.SUM(Task.point_count).alias('points_count')
+            ).join(
+                TaskAnswer.select(
+                    TaskAnswer.task_id,
+                    TaskAnswer.user_id,
+                ).distinct(
+                ).where(
+                    TaskAnswer.is_success == 1
+                ).alias('task_answer'),
+                on=(SQL('task_answer.task_id') == Task.id)
+            ).join(
+                User,
+                on=(SQL('task_answer.user_id') == User.id)
+            ).join(
+                Group
+            ).group_by(
+                User.id
+            ).order_by(
+                SQL('points_count').desc()
+            ).where(
+                User.id == user_id
+            ).alias('task_join'),
+            on=(User.id == SQL('task_join.user_id'))
+        ).where(
+            User.id == user_id
+        ).group_by(User.id)
+
+        print(profile)
+
+        return {'errors': False, 'profile': []}
