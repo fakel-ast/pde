@@ -68,6 +68,9 @@ def register_blueprints(app_name):
     from backend.apps.api import api
     app_name.register_blueprint(api, url_prefix='/api/v1/')
 
+    from backend.apps.admin import admin
+    app_name.register_blueprint(admin, url_prefix='/api/v1/admin/')
+
     if app_name.debug:
         CORS(app_name, supports_credentials=True)
 

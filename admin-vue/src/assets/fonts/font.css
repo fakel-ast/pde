@@ -1,0 +1,81 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto-Bold.eot');
+    src: local('Roboto Bold'), local('Roboto-Bold'),
+    url('Roboto-Bold.eot?#iefix') format('embedded-opentype'),
+    url('Roboto-Bold.woff') format('woff'),
+    url('Roboto-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto-Regular.eot');
+    src: local('Roboto'), local('Roboto-Regular'),
+    url('Roboto-Regular.eot?#iefix') format('embedded-opentype'),
+    url('Roboto-Regular.woff') format('woff'),
+    url('Roboto-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto-Medium.eot');
+    src: local('Roboto Medium'), local('Roboto-Medium'),
+    url('Roboto-Medium.eot?#iefix') format('embedded-opentype'),
+    url('Roboto-Medium.woff') format('woff'),
+    url('Roboto-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto-Light.eot');
+    src: local('Roboto Light'), local('Roboto-Light'),
+    url('Roboto-Light.eot?#iefix') format('embedded-opentype'),
+    url('Roboto-Light.woff') format('woff'),
+    url('Roboto-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto-Thin.eot');
+    src: local('Roboto Thin'), local('Roboto-Thin'),
+    url('Roboto-Thin.eot?#iefix') format('embedded-opentype'),
+    url('Roboto-Thin.woff') format('woff'),
+    url('Roboto-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+/* Noto Sans only for info buttons */
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('NotoSans.eot');
+    src: local('Noto Sans'), local('NotoSans'),
+    url('NotoSans.eot?#iefix') format('embedded-opentype'),
+    url('NotoSans.woff') format('woff'),
+    url('NotoSans.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('NotoSans-Bold.eot');
+    src: local('Noto Sans Bold'), local('NotoSans-Bold'),
+    url('NotoSans-Bold.eot?#iefix') format('embedded-opentype'),
+    url('NotoSans-Bold.woff') format('woff'),
+    url('NotoSans-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
