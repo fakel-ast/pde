@@ -3,7 +3,7 @@ import sys
 from flask import current_app
 from pydantic import ValidationError
 
-from apps.admin.schemas import CategoriesGet
+from backend.apps.admin.schemas import CategoriesGet
 from backend.database.models import (TaskCategory, )
 from backend.base import MyMethodView
 
