@@ -122,7 +122,7 @@ def application_routes(app):
 
     @app.route('/media/<path:path>')
     def send_media_files(path):
-        return send_from_directory(media, path)
+        return send_from_directory(media, path, as_attachment=True)
 
     @app.route('/robots.txt')
     @app.route('/favicon.ico')
