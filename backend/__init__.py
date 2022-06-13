@@ -137,7 +137,8 @@ def application_routes(app):
 
     @app.after_request
     def teardown(response):
-        response.headers['X-Content-Type-Options'] = 'nosniff'
+        # It's block js code :(
+        # response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['X-XSS-Protection'] = '1; mode=block'
         response.headers['X-Frame-Options'] = 'DENY'
         response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
