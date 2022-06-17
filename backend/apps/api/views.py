@@ -321,8 +321,9 @@ class LoginView(MyMethodView):
             user.save(only=['auth_error_count', 'updated'])
             if user.auth_error_count >= 7:
                 user.blocked = datetime.utcnow() + timedelta(hours=1)
+                user.last = datetime.utcnow()
                 user.auth_error_count = 0
-                user.save(only=['auth_error_count', 'updated', 'blocked'])
+                user.save(only=['auth_error_count', 'updated', 'blocked', 'last'])
                 return {'errors': True, 'message': 'Попробуйте авторизоваться позже!'}, 403
 
             return {'errors': True, 'message': 'Not valid data'}, 400
@@ -493,46 +494,55 @@ class UserRatings(MyMethodView):
 
 
 class Profile(MyMethodView):
+    decorators = [user_required]
 
-    def get(self, user_id: int, *args, **kwargs) -> dict:
+    def get(self, *args, **kwargs) -> dict:
         profile = User.select(
             User,
             Group.short_title.alias('group_title')
         ).join(
             Group
-        ).join(
-            Task.select(
-                User.id.alias('user_id'),
-                User.username,
-                User.fio,
-                Group.short_title.alias('group_title'),
-                fn.SUM(Task.point_count).alias('points_count')
-            ).join(
-                TaskAnswer.select(
-                    TaskAnswer.task_id,
-                    TaskAnswer.user_id,
-                ).distinct(
-                ).where(
-                    TaskAnswer.is_success == 1
-                ).alias('task_answer'),
-                on=(SQL('task_answer.task_id') == Task.id)
-            ).join(
-                User,
-                on=(SQL('task_answer.user_id') == User.id)
-            ).join(
-                Group
-            ).group_by(
-                User.id
-            ).order_by(
-                SQL('points_count').desc()
-            ).where(
-                User.id == user_id
-            ).alias('task_join'),
-            on=(User.id == SQL('task_join.user_id'))
         ).where(
-            User.id == user_id
-        ).group_by(User.id)
+            User.id == current_user.id
+        ).group_by(
+            User.id
+        ).dicts().first()
 
-        print(profile)
+        ratings = Task.select(
+            User.id.alias('user_id'),
+            User.username,
+            User.fio,
+            Group.short_title.alias('group_title'),
+            fn.SUM(Task.point_count).alias('points_count')
+        ).join(
+            TaskAnswer.select(
+                TaskAnswer.task_id,
+                TaskAnswer.user_id,
+            ).distinct(
+            ).where(
+                TaskAnswer.is_success == 1
+            ).alias('task_answer'),
+            on=(SQL('task_answer.task_id') == Task.id)
+        ).join(
+            User,
+            on=(SQL('task_answer.user_id') == User.id)
+        ).join(
+            Group
+        ).group_by(
+            User.id
+        ).order_by(
+            SQL('points_count').desc()
+        ).objects()
 
-        return {'errors': False, 'profile': []}
+        list_index = [i for i, user in enumerate(list(ratings)) if user.user_id == current_user.id]
+        rating = None
+        if len(list_index):
+            rating = list_index[0] + 1
+
+        return {'errors': False, 'profile': profile, 'rating': rating}
+
+    def post(self, *args, **kwargs):
+        print(self.data.get('fio'))
+        print(current_user.id)
+        User.update(fio=self.data.get('fio')).where(User.id == current_user.id).execute()
+        return {'errors': False}

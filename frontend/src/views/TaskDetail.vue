@@ -235,7 +235,6 @@
 import {nextTick} from "vue";
 
 const filesize = require("filesize");
-const moment = require("moment");
 
 import SlideUpDown from "vue3-slide-up-down";
 
@@ -258,6 +257,7 @@ export default {
     getSolvedSuffix: Function,
     getUsersSuffix: Function,
     openModalLogin: Function,
+    getAnswerDate: Function,
   },
   components: {
     SlideUpDown,
@@ -304,9 +304,6 @@ export default {
     },
     getFileSize(size) {
       return filesize(size);
-    },
-    getAnswerDate(date) {
-      return moment(date).locale("ru").format("DD:MM:YYYY в H:mm");
     },
     getStatistics() {
       if (!this.task) return {};

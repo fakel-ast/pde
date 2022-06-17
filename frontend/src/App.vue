@@ -15,6 +15,7 @@
     :get-users-suffix="getUsersSuffix"
     :get-points-count-suffix="getPointsCountSuffix"
     :open-modal-login="openModalLogin"
+    :get-answer-date="getAnswerDate"
   />
   <footer-component :open-modal-login="openModalLogin" :categories="categories"/>
 </template>
@@ -26,6 +27,7 @@ import ModalLogin from "@/components/modal/ModalLogin";
 import ModalRegister from "@/components/modal/ModalRegister";
 import {Axios} from "@/assets/js/http-common";
 import {computed} from "vue";
+import moment from "moment";
 
 export default {
   name: "App",
@@ -168,6 +170,9 @@ export default {
     onResize() {
       this.deviceWidth = window.innerWidth;
     },
+    getAnswerDate(date) {
+      return moment(date).locale("ru").format("DD:MM:YYYY в H:mm");
+    },
   },
 };
 </script>
@@ -219,6 +224,23 @@ body {
   font-weight: normal;
 }
 
+input {
+  padding: 0;
+  outline: none;
+  border: none;
+  background-image: none;
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  font-family: "TT Commons";
+
+  @include _desktop {
+    font-size: toRem(22);
+    line-height: toRem(25);
+  }
+}
+
 .container {
   padding: 0 toRemMob(28);
   margin: 0 auto;
@@ -265,6 +287,7 @@ body {
   }
 
   &.disabled {
+    cursor: auto;
     background: $grey-color;
   }
 }
