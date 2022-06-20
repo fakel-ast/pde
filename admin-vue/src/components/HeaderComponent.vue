@@ -68,7 +68,6 @@ export default {
     background-repeat: no-repeat;
     background-position: center;
     cursor: pointer;
-    background-image: url("../assets/images/icons/logo.svg");
   }
 
   &__open-icon {

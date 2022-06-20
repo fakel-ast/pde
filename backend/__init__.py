@@ -101,6 +101,11 @@ def application_context_processor(app):
 def application_routes(app):
     """Глобальные маршруты"""
 
+    @app.route('/admin/')
+    @app.route('/admin/<path:path>/')
+    def admin_index(*args, **kwargs):
+        return render_template('admin_index.html')
+
     @app.route('/')
     @app.route('/<category_slug>/', defaults={'category_slug': ''})
     @app.route('/<category_slug>/<task_id>/', defaults={'category_slug': '', 'task_id': ''})
@@ -115,6 +120,10 @@ def application_routes(app):
     @app.route('/assets/<path:path>')
     def static_assets(path):
         return send_from_directory(os.path.join(build, 'assets'), path)
+
+    @app.route('/admin-assets/<path:path>')
+    def static_admin_assets(path):
+        return send_from_directory('admin_build/admin-assets/', path)
 
     @app.route('/fonts/<path:path>')
     def static_fonts(path):

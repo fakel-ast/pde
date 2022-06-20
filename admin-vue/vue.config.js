@@ -1,6 +1,6 @@
 const path = require("path");
 module.exports = {
-    outputDir: path.resolve(__dirname, "../app/admin_build"),
+    outputDir: path.resolve(__dirname, "../backend/admin_build"),
     assetsDir: "admin-assets",
     indexPath: process.env.NODE_ENV === 'production' ? '../templates/admin_index.html' : 'index.html',
     transpileDependencies: [
