@@ -6,7 +6,7 @@
         <span class="el-dropdown-link">
           <div class="header__user-profile">
       <div class="header__user-avatar">
-        <img :src="$serverHost + (currentUser.avatar !== null ? currentUser.avatar : 'media/avatars/default.jpg')" alt="Аватар">
+        <img src="https://greendi.com/media/avatars/default.jpg" alt="Аватар">
       </div>
       <div class="header__user-info">
         <h2 class="header__user-name">
