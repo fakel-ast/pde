@@ -1,34 +1,37 @@
 <template>
   <div class="profile-info">
-    <img class="profile-info__avatar" src="@/assets/images/header/kaonasi.jpg" alt="Profile image">
-    <div class="profile-info__text">
-      <p
-        v-if="!isChangeName"
-        @click="toggleChangeName"
-        class="profile-info__name"
-      >
-        {{ profile.fio }}
-      </p>
-      <input
-        v-else
-        @blur="toggleChangeName(), updateName($event.target.value)"
-        :value="profile.fio"
-        class="profile-input profile-info__name"
-        type="text"
-        v-focus
-      >
-      <p
-        class="profile-info__group"
-      >
-        Группа: {{ profile.group_title }}
-      </p>
-      <p class="profile-info__last">
-        Последняя авторизация: {{ getAnswerDate(profile.last) }}
-      </p>
-      <div class="profile-info__rating">
-        Рейтинг: {{ profile.rating }}
+    <template v-if="profile">
+      <img class="profile-info__avatar" src="@/assets/images/header/kaonasi.jpg" alt="Profile image">
+      <div class="profile-info__text">
+        <p
+          v-if="!isChangeName"
+          @click="toggleChangeName"
+          class="profile-info__name"
+        >
+          {{ profile.fio }}
+        </p>
+        <input
+          v-else
+          @blur="toggleChangeName(), updateName($event.target.value)"
+          :value="profile.fio"
+          class="profile-input profile-info__name"
+          type="text"
+          v-focus
+        >
+        <p
+          class="profile-info__group"
+        >
+          Группа: {{ profile.group_title }}
+        </p>
+        <p class="profile-info__last">
+          Последняя авторизация: {{ getAnswerDate(profile.last) }}
+        </p>
+        <div class="profile-info__rating">
+          Рейтинг: {{ profile.rating }}
+        </div>
       </div>
-    </div>
+    </template>
+
   </div>
 </template>
 
@@ -40,7 +43,7 @@ export default {
   },
   props: {
     profile: Object,
-    getAnswerDate: Function
+    getAnswerDate: Function,
   },
   data() {
     return {
@@ -107,17 +110,16 @@ export default {
 
   &__name {
     position: relative;
-    @include _desktop {
-      &::after {
-        content: "";
-        top: 0;
-        position: absolute;
-        width: toRem(20);
-        height: toRem(23);
-        margin-left: toRem(9);
-        background: url("../assets/images/profile/edit.svg") center center no-repeat;
-        cursor: pointer;
-      }
+
+    &::after {
+      content: "";
+      top: 0;
+      position: absolute;
+      width: toRem(20);
+      height: toRem(23);
+      margin-left: toRem(9);
+      background: url("../assets/images/profile/edit.svg") center center no-repeat;
+      cursor: pointer;
     }
   }
 

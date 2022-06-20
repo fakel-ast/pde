@@ -64,12 +64,11 @@
 </template>
 
 <script>
-import {Axios} from "@/assets/js/http-common";
-
 export default {
   name: "HeaderComponent",
   props: {
     openModalLogin: Function,
+    logout: Function
   },
   data() {
     return {
@@ -83,15 +82,6 @@ export default {
         document.documentElement.style.overflow = "hidden";
       } else {
         document.documentElement.style.overflow = "";
-      }
-    },
-    logout() {
-
-      this.$store.commit("updateCurrentUser", {});
-      try {
-        Axios.get("users/logout/");
-      } catch (error) {
-        console.log(error);
       }
     },
   },

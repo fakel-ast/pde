@@ -27,14 +27,14 @@
             >
               Профиль
             </li>
-            <li
-              @click="page = 'security'"
-              :class="{disabled: page === 'security'}"
-              class="profile-nav__item button"
-            >
-              Безопасность
-            </li>
-            <li class="profile-nav__item button button-red">
+            <!--            <li-->
+            <!--              @click="page = 'security'"-->
+            <!--              :class="{disabled: page === 'security'}"-->
+            <!--              class="profile-nav__item button"-->
+            <!--            >-->
+            <!--              Безопасность-->
+            <!--            </li>-->
+            <li class="profile-nav__item button button-red" @click="logout(), redirectToMainPage()">
               Выйти
             </li>
           </ul>
@@ -53,6 +53,7 @@ export default {
   name: "Profile",
   props: {
     getAnswerDate: Function,
+    logout: Function,
   },
   components: {
     ProfileMainInfo,
@@ -83,6 +84,9 @@ export default {
     updateProfileGroup(newGroup) {
       this.profile.group = newGroup;
       this.updateProfile();
+    },
+    redirectToMainPage() {
+      this.$router.push({ name: "Categories" });
     },
   },
 };

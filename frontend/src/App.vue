@@ -1,5 +1,5 @@
 <template>
-  <header-component :open-modal-login="openModalLogin"/>
+  <header-component :open-modal-login="openModalLogin" :logout="logout"/>
   <modal-login
     ref="modalLogin"
     :open-modal-register="openModalRegister"
@@ -16,6 +16,7 @@
     :get-points-count-suffix="getPointsCountSuffix"
     :open-modal-login="openModalLogin"
     :get-answer-date="getAnswerDate"
+    :logout="logout"
   />
   <footer-component :open-modal-login="openModalLogin" :categories="categories"/>
 </template>
@@ -61,6 +62,14 @@ export default {
     };
   },
   methods: {
+    async logout() {
+      this.$store.commit("updateCurrentUser", {});
+      try {
+        await Axios.get("users/logout/");
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async getCategories() {
       try {
         const { data } = await Axios.get("categories/");

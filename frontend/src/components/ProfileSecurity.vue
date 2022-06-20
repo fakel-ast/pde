@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <h1>Этот компонент находится в разработке</h1>
 </template>
 
 <script>
